@@ -1,0 +1,64 @@
+{% extends "template/basepage.html" %}
+{% block navigator %}
+<a  href="/PluginList">插件管理</a>
+ >> <a href="#">添加插件</a> >> <a href="javascript:history.back(-1);">后退</a>
+{% endblock %}
+{% block content %}
+<form action="/PluginUpdate" method="post" id="form1" onsubmit="return valSubmit('form1');">
+    {% if id %}
+ <input type="hidden" name="id" value="{{plugin.key().id()}}"/>
+    {%endif%}
+<table width="90%"  id="fromtable" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+  <tr  bgcolor="#ffffff">
+    <td style="padding-left:5px;" >插件名称:</td>
+  </tr>
+  <tr  bgcolor="#ffffff">
+    <td>
+      <input type="text" name="name"  val="{'required':true,'title':'插件名称'}" value="{{plugin.name}}" style="width:500px;"/>  <span class="red_star">*</span>  </td>
+  </tr>
+    <!--<tr  bgcolor="#ffffff">-->
+    <!--<td style="padding-left:5px;" >插见分类:(空格间隔)</td>-->
+    <!--</tr>-->
+    <!--<tr  bgcolor="#ffffff">-->
+    <!--<td>-->
+      <!--<input type="text" name="kind" value="{{plugin.kinds|join(' ')}}" style="width:500px;"/>    </td>-->
+    <!--</tr>-->
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >编码:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <input type="text" name="code" val="{'required':true,'title':'编码'}"   value="{{plugin.code}}"  style="width:500px;"/><span class="red_star">*</span>	</td>
+  </tr>
+
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >应用包名:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <input type="text" name="appcode" val="{'required':true,'title':'应用包名'}"  value="{{plugin.appcode}}"  style="width:500px;"/><span class="red_star">*</span>	</td>
+  </tr>
+    
+  <tr bgcolor="#ffffff" >
+    <td  style="padding-left:5px;" >介绍:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <textarea name="desc"  style="width:500px;" rows="5">{{plugin.desc}}</textarea>	</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>&nbsp;</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td  align="left"  style="padding-left:25px;" >
+      <input type="submit" name="Submit" value="确定"/>
+	  <input type="reset" name="Reset" value="重置"/>
+	  <input type="button" name="Return" value="返回" onClick="javascript:history.back(-1);" />
+        {%if plugin%}
+	  <input type="button" name="Return" value="上传新版本" onClick="javascript:location.href='/PluginUpload?pluginid={{plugin.key().id()}}';" />
+        {%endif%}
+    </td>
+  </tr>
+</table>
+</form>
+{% endblock %}

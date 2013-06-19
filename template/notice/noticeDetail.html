@@ -1,0 +1,71 @@
+{% extends "template/basepage.html" %}
+{%block js%}
+<script type="text/javascript">
+
+</script>
+{%endblock%}
+{% block navigator %}
+<a  href="/PluginList">系统消息管理</a>
+ >> <a href="#">发布系统消息</a> >> <a href="javascript:history.back(-1);">后退</a>
+{% endblock %}
+{% block content %}
+<form action="/NoticeUpdate"  enctype="multipart/form-data"  method="post" id="form1" onsubmit="initform();return valSubmit('form1');">
+    {% if id %}
+ <input type="hidden" name="id" value="{{notice.key().id()}}"/>
+    {%endif%}
+<table width="90%"  id="fromtable" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+  <tr  bgcolor="#ffffff">
+    <td style="padding-left:5px;" >标题:</td>
+  </tr>
+  <tr  bgcolor="#ffffff">
+    <td>
+      {{notice.title}}  </td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >类型:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+  <td>
+      {%if notice.type==1%}系统消息{%else%}新插件广告{%endif%}
+	  </td>
+  </tr>
+    {%if notice.type==2%}
+  <tr bgcolor="#ffffff" id="type2_1" style="display:none;" >
+    <td style="padding-left:5px;" >插件:</td>
+  </tr>
+  <tr bgcolor="#ffffff"  id="type2_2" style="display:none;" >
+  <td>
+            {%for plugin in pluginList%}
+      {%if notice.plugin==plugin.key().id()%}{{plugin.name}}{%endif%}
+            {%endfor%}
+	  </td>
+  </tr>
+  <tr bgcolor="#ffffff"  id="type2_3" style="display:none;" >
+    <td style="padding-left:5px;" >使用插件版本的图片:</td>
+  </tr>
+  <tr bgcolor="#ffffff" id="type2_4" style="display:none;" >
+  <td>
+      {%if notice.pluginimg==1%}使用{%else%}不使用{%endif%}
+	  </td>
+  </tr>
+{%endif%}
+    {%for item in noticecontent%}
+        {%if item.type=='img'%}
+    <tr bgcolor="#ffffff" id="tr{{item.imgid}}" >
+    <td>
+       <img id="img{{item.imgid}}" src="/download?image_id={{item.imgid}}" border="0">
+    </td>
+    </tr>
+        {%else%}
+  <tr bgcolor="#ffffff" >
+    <td>
+       {{item.content}}</textarea>	</td>
+  </tr>
+        {%endif%}
+    {%endfor%}
+
+
+</table>
+</form>
+
+{% endblock %}
