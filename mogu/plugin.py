@@ -262,7 +262,11 @@ class PluginInfoUpdate(Page):
 class PluginInfoAll(Page):
     def get(self):
         pluginVersionDict = {}
-        for plugin in Plugin.all().order('-lastUpdateTime'):
+        query=Plugin.all()
+        appcode=self.request.get('appcode',None)
+        if appcode:
+            query.filter('appcode =',appcode)
+        for plugin in query.order('-lastUpdateTime'):
             if plugin.isdel:
                 pluginVersionDict[plugin.appcode] = {'isdel': plugin.isdel}
             else:
@@ -286,7 +290,7 @@ class PluginInfoAll(Page):
 def jsonToStr(pluginVersionDict):
     jl = []
     for k in pluginVersionDict.keys():
-        if pluginVersionDict['isdel']:
+        if pluginVersionDict[k]['isdel']:
             jl.append({'appcode': k, 'isdel': True})
         else:
             p = {'imglist': [], 'appcode': k, 'isdel': False, 'url':'%s/PluginDownload?pluginid=%s'%(WEBURL, pluginVersionDict[k]['plugin'].key().id()),
@@ -294,7 +298,7 @@ def jsonToStr(pluginVersionDict):
                  'newversionname': pluginVersionDict[k]['pluginVersion'].versioncode,
                  'newversion': pluginVersionDict[k]['newversionnum'], 'name': pluginVersionDict[k]['plugin'].name,
                   'desc': pluginVersionDict[k]['plugin'].desc,
-                 'lastUpdate': pluginVersionDict[k]['pluginVersion'].date}
+                 'lastUpdate': pluginVersionDict[k]['pluginVersion'].date.strftime('%Y-%m-%d %H:%M')}
             for i, imgid in enumerate(pluginVersionDict[k]['pluginVersion'].imageids):
                 p['imglist'].append({'appversion':pluginVersionDict[k]['newversionnum'],'index': i, 'url': '%s/download?image_id=%s' % (WEBURL, imgid)})
             jl.append(p)

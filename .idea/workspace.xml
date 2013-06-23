@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2793c47e-190b-484c-b0d8-94df4806a329" name="Default" comment="" />
+    <list default="true" id="2793c47e-190b-484c-b0d8-94df4806a329" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mogu/plugin.py" afterPath="$PROJECT_DIR$/mogu/plugin.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="mogu3.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/app.yaml" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370092505240" ignored="false" />
@@ -10,11 +14,11 @@
     <file path="/user.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370096012615" ignored="false" />
     <file path="/main.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370102467793" ignored="false" />
     <file path="/model.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370619590635" ignored="false" />
-    <file path="/plugin.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1371681676446" ignored="false" />
+    <file path="/plugin.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1372002568230" ignored="false" />
     <file path="/menu.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370473628764" ignored="false" />
     <file path="/notice.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1371636179658" ignored="false" />
     <file path="/picture.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370269678939" ignored="false" />
-    <file path="/Dummy.txt" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1371473788244" ignored="false" />
+    <file path="/Dummy.txt" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1372002340887" ignored="false" />
     <file path="/pluginUpdate.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370301888037" ignored="false" />
     <file path="/pluginUpload.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370270814947" ignored="false" />
     <file path="/pluginList.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370298716176" ignored="false" />
@@ -40,19 +44,19 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="plugin.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="plugin.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mogu/plugin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="299" column="24" selection-start="12040" selection-end="12040" vertical-scroll-proportion="0.0">
+            <state line="267" column="45" selection-start="10057" selection-end="10057" vertical-scroll-proportion="0.35532996">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="model.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mogu/models/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="0" selection-start="174" selection-end="174" vertical-scroll-proportion="0.47342193">
+            <state line="62" column="11" selection-start="1712" selection-end="1719" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -79,10 +83,8 @@
       <file leaf-file-name="notice.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mogu/notice.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="165" column="18" selection-start="6562" selection-end="6677" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#57#77#0" expanded="true" />
-              </folding>
+            <state line="181" column="28" selection-start="7415" selection-end="7428" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -99,7 +101,7 @@
       <file leaf-file-name="main.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="55" column="59" selection-start="2682" selection-end="2682" vertical-scroll-proportion="0.0">
+            <state line="45" column="60" selection-start="2193" selection-end="2193" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -139,6 +141,14 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
@@ -156,14 +166,14 @@
         <option value="$PROJECT_DIR$/template/notice/noticeUpdate.html" />
         <option value="$PROJECT_DIR$/tools/util.py" />
         <option value="$PROJECT_DIR$/mogu/notice.py" />
-        <option value="$PROJECT_DIR$/mogu/plugin.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/mogu/plugin.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="976" />
-    <option name="y" value="244" />
+    <option name="x" value="813" />
+    <option name="y" value="390" />
     <option name="width" value="1239" />
     <option name="height" value="773" />
   </component>
@@ -199,7 +209,7 @@
       </profile-state>
     </entry>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
@@ -258,6 +268,38 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mogu3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mogu3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mogu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mogu3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mogu3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="mogu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -266,7 +308,7 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="editor.preferences.appearance" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../python" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="FullScreen" value="false" />
@@ -416,18 +458,18 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="976" y="244" width="1239" height="773" extended-state="0" />
-    <editor active="true" />
+    <frame x="813" y="390" width="1239" height="773" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16848281" sideWeight="0.6707169" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18608549" sideWeight="0.67175573" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38358974" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -470,7 +512,7 @@
     <option name="INCLUDE_TEXT_INTO_PATCH" value="false" />
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
     <option name="SHOW_FILE_HISTORY_DETAILS" value="true" />
-    <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="true" />
+    <option name="SHOW_VCS_ERROR_NOTIFICATIONS" value="false" />
     <option name="SHOW_DIRTY_RECURSIVELY" value="false" />
     <option name="LIMIT_HISTORY" value="true" />
     <option name="MAXIMUM_HISTORY_ROWS" value="1000" />
@@ -518,25 +560,9 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mogu/models/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="5" selection-start="2535" selection-end="2535" vertical-scroll-proportion="0.5723337">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/template/notice/noticeDetail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="16" selection-start="1813" selection-end="1813" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/template/notice/noticeList.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="61" selection-start="2131" selection-end="2145" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="58" column="16" selection-start="1813" selection-end="1813" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/template/plugin/pluginUpload.html">
@@ -558,6 +584,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mogu/picture.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="13" selection-start="579" selection-end="579" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tools/util.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="283" column="0" selection-start="8794" selection-end="8794" vertical-scroll-proportion="0.0">
@@ -565,16 +598,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/template/notice/noticeList.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="59" selection-start="2682" selection-end="2682" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mogu/picture.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="13" selection-start="579" selection-end="579" vertical-scroll-proportion="0.0">
+        <state line="48" column="61" selection-start="2131" selection-end="2145" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -586,25 +612,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="174" selection-end="174" vertical-scroll-proportion="0.73264784" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="60" selection-start="2193" selection-end="2193" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mogu/notice.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="165" column="18" selection-start="6562" selection-end="6677" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#57#77#0" expanded="true" />
-          </folding>
+        <state line="181" column="28" selection-start="7415" selection-end="7428" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mogu/models/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="11" selection-start="1712" selection-end="1719" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mogu/plugin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="299" column="24" selection-start="12040" selection-end="12040" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="174" selection-end="174" vertical-scroll-proportion="0.47342193">
+        <state line="267" column="45" selection-start="10057" selection-end="10057" vertical-scroll-proportion="0.35532996">
           <folding />
         </state>
       </provider>
