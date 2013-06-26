@@ -19,7 +19,7 @@ import webapp2
 from mogu.login import Login, Top, Menu
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
-from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel
+from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, ServeHandler, PluginUpload2
 from mogu.user import UserLogin, UserRegister
 
 
@@ -35,10 +35,15 @@ app = webapp2.WSGIApplication([
                                   ('/PluginList', PluginList),
                                   ('/PluginUpdate', PluginUpdate),
                                   ('/PluginUpload', PluginUpload),
+                                  ('/PluginUpload2', PluginUpload2),
                                   ('/PluginImageDel', PluginImageDel),
                                   ('/PluginDelete', PluginDelete),
                                   ('/PluginVersionDelete', PluginVersionDelete),
                                   ('/PluginDetail', PluginDetail),
+
+                                  ('/upload', UploadHandler),
+                                  ('/serve/([^/]+)?', ServeHandler),
+
 
                                   #插件 手机端接口
                                   ('/PluginDownload', PluginDownload),

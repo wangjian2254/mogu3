@@ -3,8 +3,11 @@
 #Date: 13-6-1
 #Time: 下午11:25
 import datetime
+import urllib
 from google.appengine.api import memcache
 from google.appengine.ext import db
+from google.appengine.ext.blobstore import blobstore
+from google.appengine.ext.webapp import blobstore_handlers
 from mogu.login import login_required
 from mogu.models.model import Plugin, PluginVersion, Images
 from setting import WEBURL
@@ -79,7 +82,7 @@ class PluginUpload(Page):
 
     def post(self):
         pluginid = self.request.get('pluginid', '')
-
+        needBigData=False
         id = self.request.get('id', '')
         versioncode = self.request.get('versioncode', '')
         versionnum = self.request.get('versionnum', '')
@@ -97,6 +100,8 @@ class PluginUpload(Page):
         if appdata != '' and appdata != u'' and appdata != None:
             pluginVersion.data = db.Blob(appdata.file.read())
             pluginVersion.size = appdata.bufsize
+        else:
+            needBigData=True
         for i in range(1, 11):
             imgfilename = 'image' + str(i)
             imgfield = self.request.POST.get(imgfilename)
@@ -117,10 +122,50 @@ class PluginUpload(Page):
         if pluginid:
             plugin = Plugin.get_by_id(int(pluginid))
             pluginVersionList = PluginVersion.all().filter('plugin =', int(pluginid)).order('-versionnum')
-        self.render('template/plugin/pluginUpload.html',
-                    {'plugin': plugin, 'pluginVersion': pluginVersion, 'pluginVersionList': pluginVersionList, 'id': id,
-                     'pluginid': pluginid, 'result': 'succeed', 'msg': u'操作成功。'})
 
+        data={'plugin': plugin, 'pluginVersion': pluginVersion, 'pluginVersionList': pluginVersionList, 'id': id,
+                     'pluginid': pluginid, 'result': 'succeed', 'msg': u'操作成功。','needBigData':needBigData}
+        if needBigData:
+            upload_url = blobstore.create_upload_url('/upload?pluginversionid=%s'%(pluginVersion.key().id()))
+            data['upload_url']=upload_url
+            data['msg']= u'请上传APK文件。'
+            self.render('template/plugin/pluginUpload2.html',data)
+        else:
+            self.render('template/plugin/pluginUpload.html',data )
+class PluginUpload2(Page):
+    def get(self):
+        pluginid = self.request.get('pluginid', '')
+        id = self.request.get('id', '')
+        pluginVersionList=[]
+        if pluginid:
+            plugin = Plugin.get_by_id(int(pluginid))
+            pluginVersionList = PluginVersion.all().filter('plugin =', int(pluginid)).order('-versionnum')
+
+        pluginVersion = {}
+        if id:
+            pluginVersion = PluginVersion.get_by_id(int(id))
+            if not pluginid or pluginVersion.plugin != int(pluginid):
+                plugin = Plugin.get_by_id(pluginVersion.plugin)
+        data={'plugin': plugin, 'pluginVersion': pluginVersion, 'pluginVersionList': pluginVersionList, 'id': id,
+                     'pluginid': pluginid}
+        upload_url = blobstore.create_upload_url('/upload?pluginversionid=%s'%(pluginVersion.key().id()))
+        data['upload_url']=upload_url
+        self.render('template/plugin/pluginUpload2.html',data)
+class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+    def post(self):
+        upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
+        blob_info = upload_files[0]
+        pluginversionid=self.request.get('pluginversionid')
+        pluginversion=PluginVersion.get_by_id(int(pluginversionid))
+        pluginversion.datakey=str(blob_info.key())
+        pluginversion.put()
+        self.redirect('/PluginUpload?id=%s' % pluginversionid)
+
+class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
+    def get(self, resource):
+        resource = str(urllib.unquote(resource))
+        blob_info = blobstore.BlobInfo.get(resource)
+        self.send_blob(blob_info)
 
 class PluginImageDel(Page):
     def get(self):
@@ -217,6 +262,9 @@ class PluginDownload(Page):
         if pvid:
             pv = PluginVersion.get_by_id(int(pvid))
             if pv:
+                if pv.datakey:
+                    self.redirect('/serve/%s' % pv.datakey)
+                    return
                 self.response.headers['Content-Type'] = 'application/octet-stream'
                 self.response.headers['Content-Length'] = pv.size
                 self.response.out.write(pv.data)
@@ -250,6 +298,8 @@ class PluginInfoUpdate(Page):
                     pluginVersionDict[appcode]['plugin'] = plugin
                     pluginVersionDict[appcode]['pluginVersion'] = pluginVersion
                     pluginVersionDict[appcode]['newversionnum'] = pluginVersion.versionnum
+                if not pluginVersion.data and not pluginVersion.datakey:
+                    del pluginVersionDict[appcode]
         # 输出 json 字符串 plugin 对象
         if pluginVersionDict:
             msg=[{"msg":u"新收到%s条插件更新信息"%(len(pluginVersionDict.keys()),),"type":1}]
@@ -281,6 +331,8 @@ class PluginInfoAll(Page):
                 if pluginVersion:
                     pluginVersionDict[plugin.appcode]['pluginVersion'] = pluginVersion
                     pluginVersionDict[plugin.appcode]['newversionnum'] = pluginVersion.versionnum
+                if not pluginVersion.data and not pluginVersion.datakey:
+                    del pluginVersionDict[appcode]
 
         # 输出 json 字符串 plugin 对象
         result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[]}

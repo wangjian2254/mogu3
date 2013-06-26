@@ -73,6 +73,7 @@ class PluginVersion(db.Model):
     versionnum = db.IntegerProperty()
     data = db.BlobProperty()
     size = db.IntegerProperty()
+    datakey=db.StringProperty(indexed=False)
     updateDesc = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)  #//提交时间
     imageids = db.ListProperty(item_type=int)

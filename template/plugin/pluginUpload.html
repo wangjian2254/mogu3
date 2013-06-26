@@ -52,15 +52,20 @@
     <td>
 	  <input type="text" name="versionnum"  val="{'required':true,'title':'插件版本数字','type':'int'}"  value="{{pluginVersion.versionnum}}"  style="width:500px;"/>	<span class="red_star">*</span> </td>
   </tr>
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >
+        {%if pluginVersion.size or pluginVersion.datakey%} <a href="/PluginDownload?id={{pluginVersion.key().id()}}&pluginid=">下载apk</a>{%else%}没有上传apk文件{%endif%}</td>
+  </tr>
+{%if pluginVersion %}
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >
+        <a href="/PluginUpload2?id={{pluginVersion.key().id()}}&pluginid={{pluginVersion.plugin}}">替换apk文件</a></td>
+  </tr>
+    {%endif%}
 
-  <tr bgcolor="#ffffff" >
-    <td style="padding-left:5px;" >新插件:</td>
-  </tr>
-  <tr bgcolor="#ffffff" >
-    <td>
-	  <input type="file" name="data"  {%if not pluginVersion%} val="{'required':true,'title':'新插件'}" {%endif%}   style="width:500px;"/>	{%if not pluginVersion%}<span class="red_star">*</span>{%endif%}{%if pluginVersion%} <a href="/PluginDownload?id={{pluginVersion.key().id()}}&pluginid=">下载</a>{%endif%}</td>
-  </tr>
-    
+
+
+
   <tr bgcolor="#ffffff" >
     <td  style="padding-left:5px;" >更新介绍:</td>
   </tr>
