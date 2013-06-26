@@ -1,0 +1,103 @@
+{% extends "template/basepage.html" %}
+{%block js%}
+        <script type="text/javascript">
+        function delImg(pid,id){
+            art.dialog({id:'msg',title:'提示',content:"要删除点击的图片么？",icon:'warning',lock: true,cancel:true,ok:function(){
+                try{
+                    $j.get('PluginImageDel?id='+id+'&pid='+pid,null,result,false);
+
+                }catch(e){
+                    return ;
+                }
+            }});
+        }
+        function result(result){
+            var resultobj=JSON2.parse(result);
+            if(resultobj.success){
+                result_alert2('succeed',resultobj.message);
+            }else{
+                result_alert2('warning',resultobj.message);
+            }
+            document.getElementById('img'+resultobj.result).style.display='none';
+        }
+    </script>
+{%endblock%}
+{% block navigator %}
+<a  href="/PluginList">插件管理</a> 
+ >> <a href="/PluginUpdate">添加插件</a> >> <a href="/PluginUpload?pluginid={{plugin.key().id()}}">上传新版本插件</a> >> <a href="javascript:history.back(-1);">后退</a>
+{% endblock %}
+{% block content %}
+<form action="{{upload_url}}"  enctype="multipart/form-data" method="post" id="form1" onsubmit="return valSubmit('form1');">
+
+<table width="90%" id="fromtable" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+  <tr  bgcolor="#ffffff">
+    <td style="padding-left:5px;" >“{{plugin.name}}” 插件上传新版本</td>
+  </tr>
+  <tr  bgcolor="#ffffff">
+    <td style="padding-left:5px;" >插件版本名称:</td>
+  </tr>
+  <tr  bgcolor="#ffffff">
+    <td>
+      {{pluginVersion.versioncode}} </td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >插件版本数字:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  {{pluginVersion.versionnum}}</td>
+  </tr>
+
+  <tr bgcolor="#ffffff" >
+    <td style="padding-left:5px;" >新插件:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  <input type="file" name="file"  {%if not pluginVersion%} val="{'required':true,'title':'新插件'}" {%endif%}   style="width:500px;"/>
+        <span class="red_star">*</span>{%if pluginVersion%} <a href="/PluginDownload?id={{pluginVersion.key().id()}}&pluginid=">下载</a>{%endif%}</td>
+  </tr>
+    
+  <tr bgcolor="#ffffff" >
+    <td  style="padding-left:5px;" >更新介绍:</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  {{pluginVersion.updateDesc}}	</td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>&nbsp;</td>
+  </tr>
+
+
+  <tr bgcolor="#ffffff" >
+    <td  align="left"  style="padding-left:25px;" >
+      <input type="submit" name="Submit" value="上传"/>
+	      </td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  已上传图片：
+    </td>
+  </tr>
+   <tr bgcolor="#ffffff" >
+    <td>
+	  {%for img in pluginVersion.imageids%}
+        <div style="margin: 5px;float: left;"><a href="javascript:delImg('{{pluginVersion.key().id()}}','{{img}}');"><img id="img{{img}}" src="/download?image_id={{img}}" border="0"></a></div>
+	  {%endfor%}
+    </td>
+  </tr>
+  <tr bgcolor="#ffffff" >
+    <td>
+	  所有版本：
+    </td>
+  </tr>
+    {%for p in pluginVersionList %}
+   <tr bgcolor="#ffffff" >
+    <td style="padding-left: 20px;">
+        {{loop.index}}.&nbsp;&nbsp;<a href="/PluginUpload?pluginid={{p.plugin}}&id={{p.key().id()}}">{{p.versioncode}}&nbsp;&nbsp;&nbsp;&nbsp;日期：{{p.date|datetimeformat}}</a>
+    </td>
+  </tr>
+    {%endfor%}
+</table>
+</form>
+{% endblock %}
