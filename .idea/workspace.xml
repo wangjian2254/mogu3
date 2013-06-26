@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2793c47e-190b-484c-b0d8-94df4806a329" name="Default" comment="plugininfoall 根据appcode 单独插件信息。">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/template/plugin/pluginUpload2.html" />
+    <list default="true" id="2793c47e-190b-484c-b0d8-94df4806a329" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.yaml" afterPath="$PROJECT_DIR$/index.yaml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="mogu3.iws" />
@@ -17,7 +17,7 @@
     <file path="/menu.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370473628764" ignored="false" />
     <file path="/notice.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1371636179658" ignored="false" />
     <file path="/picture.py" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370269678939" ignored="false" />
-    <file path="/Dummy.txt" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1372246301470" ignored="false" />
+    <file path="/Dummy.txt" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1372246321046" ignored="false" />
     <file path="/pluginUpdate.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370301888037" ignored="false" />
     <file path="/pluginUpload.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370270814947" ignored="false" />
     <file path="/pluginList.html" changelist="2793c47e-190b-484c-b0d8-94df4806a329" time="1370298716176" ignored="false" />
@@ -43,19 +43,19 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="plugin.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="plugin.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mogu/plugin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="263" column="18" selection-start="10047" selection-end="10047" vertical-scroll-proportion="-0.24">
+            <state line="285" column="38" selection-start="10955" selection-end="10955" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.yaml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="index.yaml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="28" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.0">
+            <state line="34" column="19" selection-start="826" selection-end="826" vertical-scroll-proportion="1.0514139">
               <folding />
             </state>
           </provider>
@@ -165,8 +165,8 @@
         <option value="$PROJECT_DIR$/tools/util.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/mogu/plugin.py" />
-        <option value="$PROJECT_DIR$/index.yaml" />
         <option value="$PROJECT_DIR$/mogu/notice.py" />
+        <option value="$PROJECT_DIR$/index.yaml" />
       </list>
     </option>
   </component>
@@ -530,23 +530,27 @@
       <created>1372246270875</created>
       <updated>1372246270875</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="plugininfoall 根据appcode 单独插件信息。">
+      <created>1372246325298</created>
+      <updated>1372246325298</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="321" y="234" width="1239" height="773" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32977098" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977098" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19279128" sideWeight="0.670229" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19279128" sideWeight="0.67175573" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38358974" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32824427" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32824427" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -706,13 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="19" selection-start="733" selection-end="733" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mogu/notice.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="191" column="8" selection-start="8049" selection-end="8049" vertical-scroll-proportion="0.0">
@@ -722,7 +719,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mogu/plugin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="263" column="18" selection-start="10047" selection-end="10047" vertical-scroll-proportion="-0.24">
+        <state line="285" column="38" selection-start="10955" selection-end="10955" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="19" selection-start="826" selection-end="826" vertical-scroll-proportion="1.0514139">
           <folding />
         </state>
       </provider>

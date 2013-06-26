@@ -28,6 +28,12 @@ indexes:
   - name: lastUpdateTime
     direction: desc
 
+- kind: Plugin
+  properties:
+  - name: appcode
+  - name: lastUpdateTime
+    direction: desc
+
 - kind: PluginVersion
   properties:
   - name: plugin
