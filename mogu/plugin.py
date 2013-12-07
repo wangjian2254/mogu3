@@ -165,6 +165,7 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
+        self.response.headers['Content-Length'] = blob_info.size
         self.send_blob(blob_info)
 
 class PluginImageDel(Page):
