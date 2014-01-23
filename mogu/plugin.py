@@ -333,7 +333,7 @@ class PluginInfoAll(Page):
                     pluginVersionDict[plugin.appcode]['pluginVersion'] = pluginVersion
                     pluginVersionDict[plugin.appcode]['newversionnum'] = pluginVersion.versionnum
                 if not pluginVersion.data and not pluginVersion.datakey:
-                    del pluginVersionDict[appcode]
+                    del pluginVersionDict[plugin.appcode]
 
         # 输出 json 字符串 plugin 对象
         result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[]}

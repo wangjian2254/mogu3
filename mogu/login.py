@@ -1,6 +1,5 @@
 #coding=utf-8
 #
-from setting import ImageLibUri, RssGroup, imGroup
 
 __author__ = u'王健'
 from models.model import Users
@@ -117,5 +116,5 @@ class Top(Page):
 class Menu(Page):
   @login_required
   def get(self):
-      self.render('template/menu.html',{'imgliburi':ImageLibUri,'rssgroupuri':RssGroup,'groupuri':imGroup})
+      self.render('template/menu.html',{})
   
