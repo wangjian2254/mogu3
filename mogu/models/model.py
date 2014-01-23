@@ -4,11 +4,40 @@
 #Time: 下午9:21
 import json
 import os
+from google.appengine.api import memcache
 
 __author__ = u'王健'
 
 from google.appengine.ext import db
 
+class WebSiteUrl(db.Model):
+    '''
+    网站域名，方便使用 快速的域名
+    '''
+    url = db.URLProperty()
+    updateTime = db.DateTimeProperty(auto_now=True)
+
+    @classmethod
+    def getInitUrl(cls):
+        url = memcache.get('usedurl')
+        if not url:
+            u = cls.all().order('-updateTime').fetch(1)
+            if len(u):
+                url = u[0].url
+                memcache.set('usedurl',u[0].url,3600*24*10)
+            else:
+                u = WebSiteUrl()
+                u.url = 'http://plugins.mmggoo.com'
+                u.put()
+                url = u.url
+        return url
+
+    def delete(self,**kwargs):
+        super(WebSiteUrl, self).put(**kwargs)
+        memcache.delete('usedurl')
+    def put(self,**kwargs):
+        super(WebSiteUrl, self).put(**kwargs)
+        memcache.set('usedurl',self.url,3600*24*10)
 
 #记录最新的用户名
 class UserNameNumber(db.Model):
@@ -25,26 +54,8 @@ class Users(db.Model):
 class User(db.Model): #//用户表
     userName = db.StringProperty() #//用户名
     passWord = db.StringProperty()  #//密码
-    # trueName = db.StringProperty()  #//姓名
-    # tele = db.StringProperty()      #//电话号码
-    # mobile = db.StringProperty()    #//手机
     date = db.DateTimeProperty(auto_now_add=True)  #//注册时间
     lastUpdateTime = db.DateTimeProperty(auto_now=True) #//最后一次修改时间
-    # appData = db.TextProperty()#记录应用的必要数据gae端事json格式，传输时用urlprams的方式传输
-
-    # __appinit = False
-    # __appParms = {}
-
-    # def getParms(self):
-    #     if not self.__appinit:
-    #         self.__appParms = json.loads(self.appData or '{}')
-    #         self.__appinit = True
-    #     return self.__appParms
-
-    # def put(self, **kwargs):
-    #     if self.__appinit:
-    #         self.appData = json.dumps(self.__appParms)
-    #     super(User, self).put(**kwargs)
 
     @classmethod
     def get_by_keyname(cls, key_names, parent=None, **kwargs):
@@ -56,15 +67,21 @@ class User(db.Model): #//用户表
             return u
 
 
+class Kind(db.Model):
+    name = db.StringProperty()
+    index = db.IntegerProperty()
+    applist = db.StringListProperty(indexed=False)
+
 class Plugin(db.Model):
     name = db.StringProperty()
-    # kinds = db.StringListProperty()
     code = db.StringProperty()
     appcode = db.StringProperty()
     desc = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)  #//创建时间
     lastUpdateTime = db.DateTimeProperty(auto_now=True) #//最后一次修改时间
     isdel = db.BooleanProperty(default=False)
+
+    isactive=db.BooleanProperty(default=False)
 
 
 class PluginVersion(db.Model):
@@ -91,7 +108,7 @@ class Images(db.Model):
 
     @property
     def imgurl(self):
-        return "http://%s/image/%s" % (os.environ['HTTP_HOST'], self.key().id())
+        return "%s/image/%s" % (WebSiteUrl.getInitUrl(), self.key().id())
 
 
 class Notice(db.Model):
