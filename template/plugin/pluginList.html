@@ -49,7 +49,7 @@
     <td align="center">{{plugin.appcode}}</td>
     <td align="center">{{plugin.date|datetimeformat}}</td>
     <td align="center">{{plugin.lastUpdateTime|datetimeformat}}</td>
-    <td align="center">{% if plugin.isdel%}已删除{%else%}正常{%endif%}</td>
+    <td align="center">{% if plugin.isdel%}已删除{%else%}{%if plugin.isactive%}正常{%else%}缺少资料{%endif%}{%endif%}</td>
     <td align="center"><a href="/PluginUpdate?id={{plugin.key().id()}}">修改</a>&nbsp;|&nbsp;<a href="javascript:delPlugin('{{plugin.key().id()}}')">删除</a>&nbsp;|&nbsp;<a href="/PluginUpload?pluginid={{plugin.key().id()}}">上传新版本</a></td>
     </tr>
     {%endfor%}

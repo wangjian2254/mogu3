@@ -9,7 +9,7 @@ from google.appengine.ext import db
 from google.appengine.ext.blobstore import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.login import login_required
-from mogu.models.model import Plugin, PluginVersion, Images
+from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind
 from setting import WEBURL
 from tools.page import Page
 from tools.util import getResult
@@ -55,6 +55,17 @@ class PluginUpdate(Page):
             self.render('template/plugin/pluginUpdate.html',
                         {'plugin': plugin, 'id': id, 'result': 'warning', 'msg': u'插件包名已经存在。'})
             return
+        imgfield = self.request.POST.get('icon')
+        if imgfield:
+            if imgfield.type.lower()  in ['image/pjpeg', 'image/x-png','image/x-icon', 'image/jpeg', 'image/png', 'image/gif','image/jpg']:
+
+                imgfile = Images()
+                imgfile.filename = imgfield.filename
+                imgfile.filetype = imgfield.type
+                imgfile.data = db.Blob(imgfield.file.read())
+                imgfile.size = imgfield.bufsize
+                imgfile.put()
+                plugin.imageid=imgfile.key().id()
         plugin.put()
         self.render('template/plugin/pluginUpdate.html',
                     {'plugin': plugin, 'id': plugin.key().id(), 'result': 'succeed', 'msg': u'修改成功。'})
@@ -158,6 +169,7 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         pluginversionid=self.request.get('pluginversionid')
         pluginversion=PluginVersion.get_by_id(int(pluginversionid))
         pluginversion.datakey=str(blob_info.key())
+        pluginversion.size = blob_info.size
         pluginversion.put()
         self.redirect('/PluginUpload?id=%s' % pluginversionid)
 
@@ -264,7 +276,7 @@ class PluginDownload(Page):
             pv = PluginVersion.get_by_id(int(pvid))
             if pv:
                 if pv.datakey:
-                    self.redirect('/serve/%s' % pv.datakey)
+                    self.redirect('%s/serve/%s' % (WebSiteUrl.getInitUrl(),pv.datakey))
                     return
                 self.response.headers['Content-Type'] = 'application/octet-stream'
                 self.response.headers['Content-Length'] = pv.size
@@ -313,7 +325,7 @@ class PluginInfoUpdate(Page):
 class PluginInfoAll(Page):
     def get(self):
         pluginVersionDict = {}
-        query=Plugin.all()
+        query=Plugin.all().filter('isactive =',True)
         appcode=self.request.get('appcode',None)
         if appcode:
             query.filter('appcode =',appcode)
@@ -332,11 +344,15 @@ class PluginInfoAll(Page):
                 if pluginVersion:
                     pluginVersionDict[plugin.appcode]['pluginVersion'] = pluginVersion
                     pluginVersionDict[plugin.appcode]['newversionnum'] = pluginVersion.versionnum
+                    pluginVersionDict[plugin.appcode]['size'] = pluginVersion.size
                 if not pluginVersion.data and not pluginVersion.datakey:
                     del pluginVersionDict[plugin.appcode]
-
+        kindlist=[]
+        for kind in Kind.all().order_by('index'):
+            #kindlist.append({'name':kind.name,'index':kind.index,'list':filter(lambda x: x, kind.applist)})
+            kindlist.append({'name':kind.name,'index':kind.index,'list':[x for x in kind.applist]})
         # 输出 json 字符串 plugin 对象
-        result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[]}
+        result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[],'kind':kindlist}
         self.flush(result)
 
 
@@ -351,6 +367,8 @@ def jsonToStr(pluginVersionDict):
                  'newversionname': pluginVersionDict[k]['pluginVersion'].versioncode,
                  'newversion': pluginVersionDict[k]['newversionnum'], 'name': pluginVersionDict[k]['plugin'].name,
                   'desc': pluginVersionDict[k]['plugin'].desc,
+                  'imageid': pluginVersionDict[k]['plugin'].imageid,
+                  'size': pluginVersionDict[k]['pluginVersion'].size,
                  'lastUpdate': pluginVersionDict[k]['pluginVersion'].date.strftime('%Y-%m-%d %H:%M')}
             for i, imgid in enumerate(pluginVersionDict[k]['pluginVersion'].imageids):
                 p['imglist'].append({'appversion':pluginVersionDict[k]['newversionnum'],'index': i, 'url': '%s/download?image_id=%s' % (WEBURL, imgid)})

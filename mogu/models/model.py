@@ -80,8 +80,15 @@ class Plugin(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)  #//创建时间
     lastUpdateTime = db.DateTimeProperty(auto_now=True) #//最后一次修改时间
     isdel = db.BooleanProperty(default=False)
-
+    imageid = db.IntegerProperty(indexed=False)
     isactive=db.BooleanProperty(default=False)
+
+    def put(self,**kwargs):
+        if self.name and self.code and self.appcode and self.desc and self.imageid:
+            pass
+        else:
+            self.isactive = False
+        super(Plugin, self).put(**kwargs)
 
 
 class PluginVersion(db.Model):
@@ -94,6 +101,15 @@ class PluginVersion(db.Model):
     updateDesc = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)  #//提交时间
     imageids = db.ListProperty(item_type=int)
+
+    def put(self,**kwargs):
+        super(PluginVersion, self).put(**kwargs)
+        p = Plugin.get_by_id(self.plugin)
+        if self.versioncode and self.versionnum and (self.data or self.datakey) and self.updateDesc and len(self.imageids) :
+            p.isactive = True
+        else:
+            p.isactive = False
+        p.put()
 
 
 class Images(db.Model):
