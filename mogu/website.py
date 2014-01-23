@@ -3,6 +3,7 @@
 #Time: 下午10:28
 from mogu.models.model import WebSiteUrl
 from tools.page import Page
+from tools.util import getResult
 
 __author__ = u'王健'
 
@@ -13,7 +14,7 @@ class WebsiteList(Page):
         self.render('template/website/websiteList.html',{"websiteList":l})
 
 class WebsiteUpdate(Page):
-    def post(self):
+    def get(self):
         url = self.request.get('url', None)
         id = self.request.get('id', None)
         if url:
@@ -22,14 +23,15 @@ class WebsiteUpdate(Page):
                 w.url=url
                 w.put()
         if id:
-            w=WebSiteUrl.get(int(id))
+            w=WebSiteUrl.get_by_id(int(id))
             w.put()
         return self.redirect('/WebsiteList')
-
+    def post(self):
+        self.get()
 class WebsiteDelete(Page):
     def get(self):
         id = self.request.get('id',None)
         if id:
-            w=WebSiteUrl.get(int(id))
+            w=WebSiteUrl.get_by_id(int(id))
             w.delete()
-        return self.redirect('/WebsiteList')
+        return self.flush(getResult(id, True, u'删除成功。'))

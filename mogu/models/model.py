@@ -33,7 +33,7 @@ class WebSiteUrl(db.Model):
         return url
 
     def delete(self,**kwargs):
-        super(WebSiteUrl, self).put(**kwargs)
+        super(WebSiteUrl, self).delete(**kwargs)
         memcache.delete('usedurl')
     def put(self,**kwargs):
         super(WebSiteUrl, self).put(**kwargs)

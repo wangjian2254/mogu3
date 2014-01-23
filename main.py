@@ -21,6 +21,7 @@ from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete
 from mogu.picture import ImageDownload
 from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, ServeHandler, PluginUpload2
 from mogu.user import UserLogin, UserRegister
+from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
 
 
 app = webapp2.WSGIApplication([
@@ -63,6 +64,9 @@ app = webapp2.WSGIApplication([
                                   # 图片下载 手机接口
                                   ('/download',ImageDownload),
                                   ('/ImageDel',ImageDel),
+                                  ('/WebsiteList',WebsiteList),
+                                  ('/WebsiteUpdate',WebsiteUpdate),
+                                  ('/WebsiteDelete',WebsiteDelete),
 
 
 
