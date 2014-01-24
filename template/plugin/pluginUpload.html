@@ -23,8 +23,8 @@
     </script>
 {%endblock%}
 {% block navigator %}
-<a  href="/PluginList">插件管理</a> 
- >> <a href="/PluginUpdate">添加插件</a> >> <a href="/PluginUpload?pluginid={{plugin.key().id()}}">上传新版本插件</a> >> <a href="javascript:history.back(-1);">后退</a>
+<a  href="/PluginList">游戏管理</a>
+ >> <a href="/PluginUpdate">添加游戏</a> >> <a href="/PluginUpload?pluginid={{plugin.key().id()}}">上传新版本游戏</a> >> <a href="javascript:history.back(-1);">后退</a>
 {% endblock %}
 {% block content %}
 <form action="/PluginUpload"  enctype="multipart/form-data" method="post" id="form1" onsubmit="return valSubmit('form1');">
@@ -36,21 +36,21 @@
     {%endif%}
 <table width="90%" id="fromtable" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
   <tr  bgcolor="#ffffff">
-    <td style="padding-left:5px;" >“{{plugin.name}}” 插件上传新版本</td>
+    <td style="padding-left:5px;" >“{{plugin.name}}” 游戏上传新版本</td>
   </tr>
   <tr  bgcolor="#ffffff">
-    <td style="padding-left:5px;" >插件版本名称:</td>
+    <td style="padding-left:5px;" >游戏版本名称:</td>
   </tr>
   <tr  bgcolor="#ffffff">
     <td>
-      <input type="text" name="versioncode"  val="{'required':true,'title':'插件版本名称'}"  value="{{pluginVersion.versioncode}}" style="width:500px;"/>  <span class="red_star">*</span>   </td>
+      <input type="text" name="versioncode"  val="{'required':true,'title':'游戏版本名称'}"  value="{{pluginVersion.versioncode}}" style="width:500px;"/>  <span class="red_star">*</span>   </td>
   </tr>
   <tr bgcolor="#ffffff" >
-    <td style="padding-left:5px;" >插件版本数字:</td>
+    <td style="padding-left:5px;" >游戏版本数字:</td>
   </tr>
   <tr bgcolor="#ffffff" >
     <td>
-	  <input type="text" name="versionnum"  val="{'required':true,'title':'插件版本数字','type':'int'}"  value="{{pluginVersion.versionnum}}"  style="width:500px;"/>	<span class="red_star">*</span> </td>
+	  <input type="text" name="versionnum"  val="{'required':true,'title':'游戏版本数字','type':'int'}"  value="{{pluginVersion.versionnum}}"  style="width:500px;"/>	<span class="red_star">*</span> </td>
   </tr>
   <tr bgcolor="#ffffff" >
     <td style="padding-left:5px;" >
@@ -77,7 +77,7 @@
     <td>&nbsp;</td>
   </tr>
   <tr bgcolor="#ffffff" >
-    <td style="padding-left:5px;" >插件图片:</td>
+    <td style="padding-left:5px;" >游戏图片:</td>
   </tr>
   <tr bgcolor="#ffffff" >
     <td>

@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 import webapp2
+from mogu.kind import KindList, KindUpdate, KindDelete
 from mogu.login import Login, Top, Menu
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
@@ -67,6 +68,10 @@ app = webapp2.WSGIApplication([
                                   ('/WebsiteList',WebsiteList),
                                   ('/WebsiteUpdate',WebsiteUpdate),
                                   ('/WebsiteDelete',WebsiteDelete),
+
+                                  ('/KindList',KindList),
+                                  ('/KindUpdate',KindUpdate),
+                                  ('/KindDelete',KindDelete),
 
 
 

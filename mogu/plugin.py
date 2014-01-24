@@ -6,7 +6,7 @@ import datetime
 import urllib
 from google.appengine.api import memcache
 from google.appengine.ext import db
-from google.appengine.ext.blobstore import blobstore
+from google.appengine.ext.blobstore import blobstore, BlobInfo
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.login import login_required
 from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind
@@ -56,7 +56,7 @@ class PluginUpdate(Page):
                         {'plugin': plugin, 'id': id, 'result': 'warning', 'msg': u'插件包名已经存在。'})
             return
         imgfield = self.request.POST.get('icon')
-        if imgfield:
+        if hasattr(imgfield,'type'):
             if imgfield.type.lower()  in ['image/pjpeg', 'image/x-png','image/x-icon', 'image/jpeg', 'image/png', 'image/gif','image/jpg']:
 
                 imgfile = Images()
@@ -168,10 +168,14 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         blob_info = upload_files[0]
         pluginversionid=self.request.get('pluginversionid')
         pluginversion=PluginVersion.get_by_id(int(pluginversionid))
+        if pluginversion.datakey:
+            b = BlobInfo.get(pluginversion.datakey)
+            b.delete()
         pluginversion.datakey=str(blob_info.key())
         pluginversion.size = blob_info.size
         pluginversion.put()
         self.redirect('/PluginUpload?id=%s' % pluginversionid)
+
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource):

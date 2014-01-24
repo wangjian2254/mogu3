@@ -23,8 +23,8 @@
         </script>
 {%endblock%}
 {% block navigator %}
-<a  href="/PluginList">插件管理</a>
- >> <a href="#">添加插件</a> >> <a href="javascript:history.back(-1);">后退</a>
+<a  href="/PluginList">游戏管理</a>
+ >> <a href="#">添加游戏</a> >> <a href="javascript:history.back(-1);">后退</a>
 {% endblock %}
 {% block content %}
 
@@ -44,13 +44,13 @@
     <tr id="tr{{notice.key().id()}}" style="cursor:hand"  height="25"  onmouseover="cells_color(this,1);" onMouseOut="cells_color(this,2);" bgcolor="#ffffff">
     <td align="center">{{loop.index}}</td>
     <td align="center"><a href="/NoticeDetail?id={{notice.key().id()}}">{{notice.title}}</a></td>
-    <td>{% if notice.type== 1%}系统消息{%else%}新插件广告{%endif%}</td>
+    <td>{% if notice.type== 1%}系统消息{%else%}新游戏广告{%endif%}</td>
 
     <td align="center">{{notice.lastUpdateTime|datetimeformat}}</td>
     <td align="center">{{notice.startdate}}</td>
     <td align="center">{{notice.enddate}}</td>
     <td align="center">{% if notice.isdel%}已删除{%else%}正常{%endif%}</td>
-    <td align="center"><a href="/NoticeUpdate?id={{notice.key().id()}}">修改</a>&nbsp;|&nbsp;<a href="javascript:delPlugin('{{notice.key().id()}}')">删除</a>&nbsp;</td>
+    <td align="center"><a href="/NoticeUpdate?id={{notice.key().id()}}"><img src="/image/update.gif"  border="0"/></a>&nbsp;|&nbsp;<a href="javascript:delPlugin('{{notice.key().id()}}')"><img src="/image/del.gif"  border="0"/></a>&nbsp;</td>
     </tr>
     {%endfor%}
 </table>

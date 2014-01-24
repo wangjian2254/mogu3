@@ -1,7 +1,7 @@
 {% extends "template/basepage.html" %}
 {% block navigator %}
-<a  href="/PluginList">插件管理</a>
- >> <a href="#">添加插件</a> >> <a href="javascript:history.back(-1);">后退</a>
+<a  href="/PluginList">游戏管理</a>
+ >> <a href="#">添加游戏</a> >> <a href="javascript:history.back(-1);">后退</a>
 {% endblock %}
 {% block content %}
 <form action="/PluginUpdate" method="post" id="form1" onsubmit="return valSubmit('form1');">
@@ -10,13 +10,13 @@
     {%endif%}
 <table width="90%"  id="fromtable" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
   <tr  bgcolor="#ffffff">
-    <td style="padding-left:5px;" >插件名称:</td>
+    <td style="padding-left:5px;" >游戏名称:</td>
   </tr>
   <tr  bgcolor="#ffffff">
     <td>
       {{plugin.name}} <div style="float: right;">{%if pluginVersion%} <a href="/PluginDownload?pluginid={{plugin.key().id()}}">下载</a>{%endif%}</div></td>
   </tr><tr  bgcolor="#ffffff">
-    <td style="padding-left:5px;" >插件版本:</td>
+    <td style="padding-left:5px;" >游戏版本:</td>
   </tr>
   <tr  bgcolor="#ffffff">
     <td>
@@ -61,7 +61,7 @@
   </tr>
     <tr bgcolor="#ffffff" >
     <td>
-      插件图片：
+      游戏图片：
     </td>
   </tr>
    <tr bgcolor="#ffffff" >

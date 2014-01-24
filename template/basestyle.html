@@ -32,7 +32,7 @@
 <td align="center">{{content.status}}</td>
 <td align="center">{{content.lastUpdateTime}}</td>
 <td align="center">{{content.updateSpanTime}}</td>
-<td align="center"> <a href="/contentUpdate?contentCode={{content.code}}&page_id={{index}}&father={{contet.father}}">编辑</a>&nbsp;|&nbsp;<a href="/contentDelete?contentCode={{content.code}}&page_id={{index}}&father={{content.father}}">删除</a>&nbsp;|&nbsp;<a href="/contentAdd?father={{content.father}}&prev={{content.prev}}&next={{content.code}}&page_id={{index}}">上添加</a>&nbsp;|&nbsp;<a href="/contentAdd?father={{content.father}}&prev={{content.code}}&next={{content.next}}&page_id={{index}}">下添加</a>
+<td align="center"> <a href="/contentUpdate?contentCode={{content.code}}&page_id={{index}}&father={{contet.father}}">编辑</a>&nbsp;|&nbsp;<a href="/contentDelete?contentCode={{content.code}}&page_id={{index}}&father={{content.father}}"><img src="/image/del.gif"  border="0"/></a>&nbsp;|&nbsp;<a href="/contentAdd?father={{content.father}}&prev={{content.prev}}&next={{content.code}}&page_id={{index}}">上添加</a>&nbsp;|&nbsp;<a href="/contentAdd?father={{content.father}}&prev={{content.code}}&next={{content.next}}&page_id={{index}}">下添加</a>
 <!--<input type="submit" value="上添加"  onClick="doCheking(this,1)"/>
 <input type="submit" value="下添加"  onClick="doCheking(this,2)"/>-->
 {%if level %}

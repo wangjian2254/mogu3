@@ -67,10 +67,11 @@ class User(db.Model): #//用户表
             return u
 
 
+class KindSort(db.Model):
+    kindlist = db.ListProperty(item_type=int,indexed=False)
 class Kind(db.Model):
     name = db.StringProperty()
-    index = db.IntegerProperty()
-    applist = db.StringListProperty(indexed=False)
+    applist = db.ListProperty(item_type=int,indexed=False)
 
 class Plugin(db.Model):
     name = db.StringProperty()
