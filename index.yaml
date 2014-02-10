@@ -24,6 +24,12 @@ indexes:
 
 - kind: Plugin
   properties:
+  - name: isactive
+  - name: lastUpdateTime
+    direction: desc
+
+- kind: Plugin
+  properties:
   - name: isdel
   - name: date
     direction: desc

@@ -1,10 +1,10 @@
 {% extends "template/basepage.html" %}
 {%block js%}
         <script  type="text/javascript">
-            function delPlugin(id){
-                art.dialog({id:'msg',title:'提示',content:"要删除点击的网址么？",icon:'warning',lock: true,cancel:true,ok:function(){
+            function delPlugin(id,kindid){
+                art.dialog({id:'msg',title:'提示',content:"要删除点击的游戏么？",icon:'warning',lock: true,cancel:true,ok:function(){
                                 try{
-                                    $j.get('WebsiteDelete?id='+id,null,result,false);
+                                    $j.get('KindPluginDelete?id='+id+'&kindid='+kindid,null,result,false);
 
                                 }catch(e){
                                     return ;
@@ -31,7 +31,10 @@
                 $j(".kind"+resultobj.result).each(function(i,tr){
                     tr.remove();
                 });
-                document.getElementById('kind'+resultobj.result).style.display='none';
+                $j("#"+resultobj.result).each(function(i,tr){
+                    tr.remove();
+                });
+                //document.getElementById('kind'+resultobj.result).style.display='none';
             }
         </script>
 {%endblock%}
@@ -64,17 +67,17 @@
         </tr>
         {% for plugin in pluginlist%}
         <tr class="kind{{kind.key().id()}}" id="kind{{kind.key().id()}}tr{{plugin.key().id()}}" style="cursor:hand"  height="25"  onmouseover="cells_color(this,1);" onMouseOut="cells_color(this,2);" bgcolor="#ffffff">
-            <td align="center">{{plugin.index}}</td>
+            <td align="center">{{loop.index}}</td>
             <td align="center">{{plugin.name}}</td>
             <td align="center"><div style="margin: 5px;float: left;"><img  src="/download?image_id={{plugin.imageid}}" border="0"></div></td>
             <td align="center">{{plugin.appcode}}</td>
         <td align="center"><a href="/KindPluginMove?path=up&kindid={{kind.key().id()}}&id={{plugin.key().id()}}"><img src="/image/up.gif"  border="0"/></a>&nbsp;|&nbsp;
             <a href="/KindPluginMove?path=down&kindid={{kind.key().id()}}&id={{plugin.key().id()}}"><img src="/image/down.gif"  border="0"/></a>&nbsp;|&nbsp;
-            <a href="javascript:delPlugin('{{plugin.key().id()}}')"><img src="/image/del.gif"  border="0"/></a>&nbsp;</td>
+            <a href="javascript:delPlugin('{{plugin.key().id()}}','{{kind.key().id()}}')"><img src="/image/del.gif"  border="0"/></a>&nbsp;</td>
         </tr>
         {%endfor%}
         <tr class="kind{{kind.key().id()}}"  bgcolor="#ffffff"  >
-            <td colspan="5" align="left" style="padding-left: 30px;height: 30px;">
+            <td colspan="5" align="left" style="padding-left: 30px;height: 30px; color: red;">
                添加游戏
             </td>
         </tr>
@@ -100,6 +103,7 @@
                             </td>
                             <td style="text-align: left;">
                             <input type="submit" value="添加">
+                                <input type="hidden" name="kindid" value="{{kind.key().id()}}">
                         </td>
                         </tr>
                     </table>
@@ -108,7 +112,7 @@
         </tr>
     {%endfor%}
     <tr   bgcolor="#ffffff" >
-        <td colspan="5" align="left" style="padding-left: 10px;height: 25px;">
+        <td colspan="5" align="left" style=" padding-left: 10px;height: 25px; color: red;">
            添加分类
         </td>
     </tr>

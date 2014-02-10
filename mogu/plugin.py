@@ -8,6 +8,7 @@ from google.appengine.api import memcache
 from google.appengine.ext import db
 from google.appengine.ext.blobstore import blobstore, BlobInfo
 from google.appengine.ext.webapp import blobstore_handlers
+from mogu.kind import getKindSort
 from mogu.login import login_required
 from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind
 from setting import WEBURL
@@ -280,7 +281,7 @@ class PluginDownload(Page):
             pv = PluginVersion.get_by_id(int(pvid))
             if pv:
                 if pv.datakey:
-                    self.redirect('%s/serve/%s' % (WebSiteUrl.getInitUrl(),pv.datakey))
+                    self.redirect(str('%s/serve/%s' % (WebSiteUrl.getInitUrl(),pv.datakey)))
                     return
                 self.response.headers['Content-Type'] = 'application/octet-stream'
                 self.response.headers['Content-Length'] = pv.size
@@ -326,6 +327,7 @@ class PluginInfoUpdate(Page):
         self.flush(result)
 
 
+
 class PluginInfoAll(Page):
     def get(self):
         pluginVersionDict = {}
@@ -352,9 +354,9 @@ class PluginInfoAll(Page):
                 if not pluginVersion.data and not pluginVersion.datakey:
                     del pluginVersionDict[plugin.appcode]
         kindlist=[]
-        for kind in Kind.all().order_by('index'):
+        for i,kind in enumerate(Kind.get_by_id(getKindSort().kindlist)):
             #kindlist.append({'name':kind.name,'index':kind.index,'list':filter(lambda x: x, kind.applist)})
-            kindlist.append({'name':kind.name,'index':kind.index,'list':[x for x in kind.applist]})
+            kindlist.append({'name':kind.name,'index':i,'list':[x for x in kind.applist if getPluginByMemcache(x).isactive]})
         # 输出 json 字符串 plugin 对象
         result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[],'kind':kindlist}
         self.flush(result)
@@ -375,7 +377,7 @@ def jsonToStr(pluginVersionDict):
                   'size': pluginVersionDict[k]['pluginVersion'].size,
                  'lastUpdate': pluginVersionDict[k]['pluginVersion'].date.strftime('%Y-%m-%d %H:%M')}
             for i, imgid in enumerate(pluginVersionDict[k]['pluginVersion'].imageids):
-                p['imglist'].append({'appversion':pluginVersionDict[k]['newversionnum'],'index': i, 'url': '%s/download?image_id=%s' % (WEBURL, imgid)})
+                p['imglist'].append({'appversion':pluginVersionDict[k]['newversionnum'],'index': i, 'url': '%s/download?image_id=%s' % (WebSiteUrl.getInitUrl(), imgid)})
             jl.append(p)
     return jl
 
@@ -383,3 +385,10 @@ def jsonToStr(pluginVersionDict):
 class PluginSearch(Page):
     def get(self):
         pass
+
+def getPluginByMemcache(id):
+    p = memcache.get('pluginid%s'%id)
+    if not p :
+        p = Plugin.get_by_id(int(id))
+        memcache.set('pluginid%s'%id,p,3600*24*10)
+    return p

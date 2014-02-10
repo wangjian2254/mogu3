@@ -30,7 +30,7 @@ class WebSiteUrl(db.Model):
                 u.url = 'http://plugins.mmggoo.com'
                 u.put()
                 url = u.url
-        return url
+        return str(url)
 
     def delete(self,**kwargs):
         super(WebSiteUrl, self).delete(**kwargs)
@@ -85,11 +85,13 @@ class Plugin(db.Model):
     isactive=db.BooleanProperty(default=False)
 
     def put(self,**kwargs):
+
         if self.name and self.code and self.appcode and self.desc and self.imageid:
             pass
         else:
             self.isactive = False
         super(Plugin, self).put(**kwargs)
+        memcache.delete('pluginid%s'%self.key().id())
 
 
 class PluginVersion(db.Model):

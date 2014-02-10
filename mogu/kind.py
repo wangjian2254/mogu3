@@ -9,6 +9,7 @@ __author__ = u'王健'
 
 def getKindSort():
     kindsort = KindSort.get_by_key_name("kindsort")
+    # kindsort.delete()
     if not kindsort:
         kindsort=KindSort(key_name='kindsort')
         for k in Kind.all():
@@ -22,6 +23,8 @@ class KindList(Page):
         allpluginlist = Plugin.all().filter('isdel =',False)
 
         for kind in Kind.get_by_id(getKindSort().kindlist):
+            if not kind:
+                continue
             pluginlist = Plugin.get_by_id(kind.applist)
             pluginlistempty= []
             for p in allpluginlist:
@@ -49,17 +52,115 @@ class KindUpdate(Page):
         kind.name = name
         kind.put()
         ks = getKindSort()
-        if kind.key().id() in  ks.applist:
-            ks.applist.remove(kind.key().id())
-        ks.applist.insert(int(index),kind.key().id())
+        if kind.key().id() in  ks.kindlist:
+            ks.kindlist.remove(kind.key().id())
+        ks.kindlist.insert(int(index),kind.key().id())
         ks.put()
         return self.redirect('/KindList')
     def post(self):
         self.get()
+
+
+
+class KindMove(Page):
+    def get(self):
+        path = self.request.get('path','')
+        kindid = self.request.get('kindid','')
+        if kindid:
+            kindid = int(kindid)
+        else:
+            return self.redirect('/KindList')
+
+        ks = getKindSort()
+        if  kindid not in  ks.kindlist:
+            return self.redirect('/KindList')
+        else:
+            index = ks.kindlist.index(kindid)
+
+            if path == 'up':
+                if index>=1:
+                    k = ks.kindlist.pop(index)
+                    ks.kindlist.insert(index-1,k)
+            elif path == 'down':
+                if index<len(ks.kindlist)-1:
+                    k = ks.kindlist.pop(index)
+                    ks.kindlist.insert(index+1,k)
+            ks.put()
+        return self.redirect('/KindList')
+
+class KindAddPlugin(Page):
+    def post(self):
+        index = self.request.get('index','0')
+        gameid = self.request.get('appcode','')
+        kindid = self.request.get('kindid','')
+        if kindid:
+            kindid = int(kindid)
+            kind = Kind.get_by_id(kindid)
+        else:
+            return self.redirect('/KindList')
+        if not gameid:
+            return self.redirect('/KindList')
+        gameid = int(gameid)
+        if gameid  in kind.applist:
+            kind.applist.remove(gameid)
+        kind.applist.insert(int(index), gameid)
+        kind.put()
+        return self.redirect('/KindList')
+
+
+class KindPluginMove(Page):
+    def get(self):
+        path = self.request.get('path','')
+        kindid = self.request.get('kindid','')
+        id = self.request.get('id','')
+        if kindid:
+            kindid = int(kindid)
+            kind = Kind.get_by_id(kindid)
+        else:
+            return self.redirect('/KindList')
+        if not id:
+            return self.redirect('/KindList')
+        id = int(id)
+        if id not in  kind.applist:
+            return self.redirect('/KindList')
+        else:
+            index = kind.applist.index(id)
+
+            if path == 'up':
+                if index>=1:
+                    k = kind.applist.pop(index)
+                    kind.applist.insert(index-1,k)
+            elif path == 'down':
+                if index<len(kind.applist)-1:
+                    k = kind.applist.pop(index)
+                    kind.applist.insert(index+1,k)
+            kind.put()
+        return self.redirect('/KindList')
+
+
 class KindDelete(Page):
     def get(self):
         id = self.request.get('id',None)
         if id:
             w=Kind.get_by_id(int(id))
             w.delete()
+        ks = getKindSort()
+        if int(id) in ks.kindlist:
+            ks.kindlist.remove(int(id))
+            ks.put()
         return self.flush(getResult(id, True, u'删除成功。'))
+
+
+class KindPluginDelete(Page):
+    def get(self):
+        id = self.request.get('id',None)
+        kindid = self.request.get('kindid',None)
+        if kindid:
+            kindid = int(kindid)
+            kind = Kind.get_by_id(kindid)
+        else:
+            return self.redirect('/KindList')
+        if int(id) in kind.applist:
+            kind.applist.remove(int(id))
+            kind.put()
+        return self.flush(getResult('kind%str%s'%(kindid,id), True, u'删除成功。'))
