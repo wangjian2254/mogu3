@@ -357,7 +357,7 @@ class PluginInfoAll(Page):
             #kindlist.append({'name':kind.name,'index':kind.index,'list':filter(lambda x: x, kind.applist)})
             kindlist.append({'name':kind.name,'index':i,'list':[getPluginByMemcache(x).appcode for x in kind.applist if getPluginByMemcache(x).isactive]})
         # 输出 json 字符串 plugin 对象
-        result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[],'kind':kindlist}
+        result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[],'kind':kindlist,'status':200,'success':True,'message':u''}
         self.flush(result)
 
 
