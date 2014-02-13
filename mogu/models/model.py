@@ -106,6 +106,7 @@ class PluginVersion(db.Model):
     imageids = db.ListProperty(item_type=int)
 
     def put(self,**kwargs):
+
         super(PluginVersion, self).put(**kwargs)
         p = Plugin.get_by_id(self.plugin)
         if self.versioncode and self.versionnum and (self.data or self.datakey) and self.updateDesc and len(self.imageids) :
@@ -113,6 +114,7 @@ class PluginVersion(db.Model):
         else:
             p.isactive = False
         p.put()
+        memcache.get('newpluginVersion' + p.appcode)
 
 
 class Images(db.Model):
