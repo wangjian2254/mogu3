@@ -375,6 +375,11 @@ def jsonToStr(pluginVersionDict):
                   'iconurl': '%s/download?image_id=%s' % (WebSiteUrl.getInitUrl(), pluginVersionDict[k]['plugin'].imageid),
                   'size': pluginVersionDict[k]['pluginVersion'].size,
                  'lastUpdate': pluginVersionDict[k]['pluginVersion'].date.strftime('%Y-%m-%d %H:%M')}
+            if not p['size']:
+                blob_info = blobstore.BlobInfo.get(pluginVersionDict[k]['pluginVersion'].datakey)
+                p['size']=blob_info.size
+                pluginVersionDict[k]['pluginVersion'].size=blob_info.size
+                pluginVersionDict[k]['pluginVersion'].put()
             for i, imgid in enumerate(pluginVersionDict[k]['pluginVersion'].imageids):
                 p['imglist'].append({'appversion':pluginVersionDict[k]['newversionnum'],'index': i+1, 'url': '%s/download?image_id=%s' % (WebSiteUrl.getInitUrl(), imgid)})
             jl.append(p)
