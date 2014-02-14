@@ -1,0 +1,100 @@
+{% extends "template/basepage.html" %}
+{%block js%}
+        <script  type="text/javascript">
+            function delPlugin(id,kindid){
+                art.dialog({id:'msg',title:'提示',content:"要删除点击的游戏么？",icon:'warning',lock: true,cancel:true,ok:function(){
+                                try{
+                                    $j.get('KindPluginDelete?id='+id+'&kindid='+kindid,null,result,false);
+
+                                }catch(e){
+                                    return ;
+                                }
+                            }});
+            }
+            function delKindPlugin(id){
+                art.dialog({id:'msg',title:'提示',content:"要删除点击的分类么？",icon:'warning',lock: true,cancel:true,ok:function(){
+                                try{
+                                    $j.get('KindDelete?id='+id,null,result,false);
+
+                                }catch(e){
+                                    return ;
+                                }
+                            }});
+            }
+            function result(result){
+                var resultobj=JSON2.parse(result);
+                if(resultobj.success){
+                    result_alert2('succeed',resultobj.message);
+                }else{
+                    result_alert2('warning',resultobj.message);
+                }
+                $j(".kind"+resultobj.result).each(function(i,tr){
+                    tr.remove();
+                });
+                $j("#"+resultobj.result).each(function(i,tr){
+                    tr.remove();
+                });
+                //document.getElementById('kind'+resultobj.result).style.display='none';
+            }
+        </script>
+{%endblock%}
+{% block navigator %}
+<a  href="/WebsiteList">分类管理</a>
+ >> <a href="#">分类管理</a> >> <a href="javascript:history.back(-1);">后退</a>
+{% endblock %}
+{% block content %}
+
+<table width="90%" cellpadding="1" cellspacing="1" border="0" bgcolor="#D5E3E6">
+    <tr bgcolor="#ffffff"  height="25">
+    <td width="40px"  align="center">顺序号</td>
+    <td width="80px" align="center">分类名称</td>
+    <td width="80px" align="center">游戏数量</td>
+
+    <td width="50px;" align="center">操作</td>
+    </tr>
+    {% for kind in kindlist %}
+        <tr class="kind{{kind.key().id()}}"  bgcolor="#ffffff" >
+            <td   align="center" style="padding-left: 10px;height: 30px;">
+                {{loop.index}}
+            </td>
+            <td align="center"><a href="/FenKindPlugin?kindid={{kind.key().id()}}">{{kind.name}}</a></td>
+            <td align="center">{{kind.applist|length}}</td>
+            <td align="center">
+                <a href="/KindMove?path=up&kindid={{kind.key().id()}}&url={{url}}"><img src="/image/up.gif"  border="0"/></a>&nbsp;|&nbsp;
+                    <a href="/KindMove?path=down&kindid={{kind.key().id()}}&url={{url}}"><img src="/image/down.gif"  border="0"/></a>&nbsp;|&nbsp;
+                    <a href="javascript:delKindPlugin('{{kind.key().id()}}')"><img src="/image/del.gif"  border="0"/></a>&nbsp;
+                </td>
+        </tr>
+    {%endfor%}
+    <tr   bgcolor="#ffffff" >
+        <td colspan="5" align="left" style=" padding-left: 10px;height: 25px; color: red;">
+           添加分类
+        </td>
+    </tr>
+    <tr   bgcolor="#ffffff" >
+        <td colspan="5" align="left" style="padding-left: 10px;height: 25px;">
+            <form action="/KindUpdate?url={{url}}" method="post">
+                <table border="0" style="width: 100%;height:100%">
+                    <tr>
+                        <td style="text-align: right;width: 60px;" >选择位置：</td>
+                        <td style="text-align: left;width: 60px;"><select name="index">
+                             {% for kind in kindlist%}
+                            <option value="{{loop.index0}}">{{loop.index}}</option>
+                            {% endfor %}
+                            <option value="{{kindlist|length}}" selected>最后</option>
+                        </select></td>
+                        <td  style="text-align: right;width: 60px;">分类名称：</td>
+                        <td style="text-align: left;width: 200px;">
+                            <input type="text" name="name" style="width: 200px;">
+                        </td>
+                        <td style="text-align: left;">
+                            <input type="submit" value="添加">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}
