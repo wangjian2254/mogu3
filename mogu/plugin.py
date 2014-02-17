@@ -367,7 +367,7 @@ def jsonToStr(pluginVersionDict):
         if pluginVersionDict[k]['isdel']:
             jl.append({'appcode': k, 'isdel': True})
         else:
-            p = {'imglist': [], 'appcode': k, 'isdel': False, 'url':'%s/PluginDownload?pluginid=%s'%(WebSiteUrl.getInitUrl(), pluginVersionDict[k]['plugin'].key().id()),
+            p = {'imglist': [], 'appcode': k, 'isdel': False, 'url':'%s/serve/%s' % (WebSiteUrl.getInitUrl(), pluginVersionDict[k]['pluginVersion'].datakey),
                  'updateDesc': pluginVersionDict[k]['pluginVersion'].updateDesc,
                  'newversionname': pluginVersionDict[k]['pluginVersion'].versioncode,
                  'newversion': pluginVersionDict[k]['newversionnum'], 'name': pluginVersionDict[k]['plugin'].name,
