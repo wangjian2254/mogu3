@@ -45,6 +45,7 @@ app = webapp2.WSGIApplication([
                                   ('/PluginDetail', PluginDetail),
 
                                   ('/upload', UploadHandler),
+                                  ('/serve/([^/]+)?/([0-9]+)?/([0-9]+)?/$', ServeHandler),
                                   ('/serve/([^/]+)?', ServeHandler),
 
 

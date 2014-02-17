@@ -178,11 +178,11 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
 
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
-    def get(self, resource):
+    def get(self, resource,start=None,end=None):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
         self.response.headers['Content-Length'] = blob_info.size
-        self.send_blob(blob_info)
+        self.send_blob(blob_info, start=int(start), end=int(end))
 
 class PluginImageDel(Page):
     def get(self):
