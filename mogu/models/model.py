@@ -27,7 +27,7 @@ class WebSiteUrl(db.Model):
                 memcache.set('usedurl',u[0].url,3600*24*10)
             else:
                 u = WebSiteUrl()
-                u.url = 'http://plugins.mmggoo.com'
+                u.url = 'http://localhost:8180'
                 u.put()
                 url = u.url
         return str(url)
