@@ -22,7 +22,7 @@ from mogu.login import Login, Top, Menu
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
 from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, ServeHandler, PluginUpload2
-from mogu.uploadscript import PluginUploadScript
+from mogu.uploadscript import PluginUploadScript, PluginUploadApkScript, PluginUploadApkDataScript
 from mogu.user import UserLogin, UserRegister
 from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
 
@@ -47,6 +47,8 @@ app = webapp2.WSGIApplication([
 
                                   ('/upload', UploadHandler),
                                   ('/PluginUploadScript', PluginUploadScript),
+                                  ('/PluginUploadApkScript', PluginUploadApkScript),
+                                  ('/PluginUploadApkDataScript', PluginUploadApkDataScript),
                                   ('/serve/([^/]+)?/([0-9]+)?/([0-9]+)?/$', ServeHandler),
                                   ('/serve/([^/]+)?', ServeHandler),
 
