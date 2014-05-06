@@ -56,16 +56,16 @@ class PluginUpdate(Page):
                         {'plugin': plugin, 'id': id, 'result': 'warning', 'msg': u'插件包名已经存在。'})
             return
         imgfield = self.request.POST.get('icon')
-        if hasattr(imgfield,'type'):
-            if imgfield.type.lower()  in ['image/pjpeg', 'image/x-png','image/x-icon', 'image/jpeg', 'image/png', 'image/gif','image/jpg']:
-
+        if hasattr(imgfield, 'type'):
+            if imgfield.type.lower() in ['image/pjpeg', 'image/x-png', 'image/x-icon', 'image/jpeg', 'image/png',
+                                         'image/gif', 'image/jpg']:
                 imgfile = Images()
                 imgfile.filename = imgfield.filename
                 imgfile.filetype = imgfield.type
                 imgfile.data = db.Blob(imgfield.file.read())
                 imgfile.size = imgfield.bufsize
                 imgfile.put()
-                plugin.imageid=imgfile.key().id()
+                plugin.imageid = imgfile.key().id()
         plugin.put()
         self.render('template/plugin/pluginUpdate.html',
                     {'plugin': plugin, 'id': plugin.key().id(), 'result': 'succeed', 'msg': u'修改成功。'})
@@ -93,7 +93,7 @@ class PluginUpload(Page):
 
     def post(self):
         pluginid = self.request.get('pluginid', '')
-        needBigData=False
+        needBigData = False
         id = self.request.get('id', '')
         versioncode = self.request.get('versioncode', '')
         versionnum = self.request.get('versionnum', '')
@@ -112,7 +112,7 @@ class PluginUpload(Page):
             pluginVersion.data = db.Blob(appdata.file.read())
             pluginVersion.size = appdata.bufsize
         else:
-            needBigData=True
+            needBigData = True
         for i in range(1, 11):
             imgfilename = 'image' + str(i)
             imgfield = self.request.POST.get(imgfilename)
@@ -134,20 +134,22 @@ class PluginUpload(Page):
             plugin = Plugin.get_by_id(int(pluginid))
             pluginVersionList = PluginVersion.all().filter('plugin =', int(pluginid)).order('-versionnum')
 
-        data={'plugin': plugin, 'pluginVersion': pluginVersion, 'pluginVersionList': pluginVersionList, 'id': id,
-                     'pluginid': pluginid, 'result': 'succeed', 'msg': u'操作成功。','needBigData':needBigData}
+        data = {'plugin': plugin, 'pluginVersion': pluginVersion, 'pluginVersionList': pluginVersionList, 'id': id,
+                'pluginid': pluginid, 'result': 'succeed', 'msg': u'操作成功。', 'needBigData': needBigData}
         if needBigData:
-            upload_url = blobstore.create_upload_url('/upload?pluginversionid=%s'%(pluginVersion.key().id()))
-            data['upload_url']=upload_url
-            data['msg']= u'请上传APK文件。'
-            self.render('template/plugin/pluginUpload2.html',data)
+            upload_url = blobstore.create_upload_url('/upload?pluginversionid=%s' % (pluginVersion.key().id()))
+            data['upload_url'] = upload_url
+            data['msg'] = u'请上传APK文件。'
+            self.render('template/plugin/pluginUpload2.html', data)
         else:
-            self.render('template/plugin/pluginUpload.html',data )
+            self.render('template/plugin/pluginUpload.html', data)
+
+
 class PluginUpload2(Page):
     def get(self):
         pluginid = self.request.get('pluginid', '')
         id = self.request.get('id', '')
-        pluginVersionList=[]
+        pluginVersionList = []
         if pluginid:
             plugin = Plugin.get_by_id(int(pluginid))
             pluginVersionList = PluginVersion.all().filter('plugin =', int(pluginid)).order('-versionnum')
@@ -157,37 +159,40 @@ class PluginUpload2(Page):
             pluginVersion = PluginVersion.get_by_id(int(id))
             if not pluginid or pluginVersion.plugin != int(pluginid):
                 plugin = Plugin.get_by_id(pluginVersion.plugin)
-        data={'plugin': plugin, 'pluginVersion': pluginVersion, 'pluginVersionList': pluginVersionList, 'id': id,
-                     'pluginid': pluginid}
-        upload_url = blobstore.create_upload_url('/upload?pluginversionid=%s'%(pluginVersion.key().id()))
-        data['upload_url']=upload_url
-        self.render('template/plugin/pluginUpload2.html',data)
+        data = {'plugin': plugin, 'pluginVersion': pluginVersion, 'pluginVersionList': pluginVersionList, 'id': id,
+                'pluginid': pluginid}
+        upload_url = blobstore.create_upload_url('/upload?pluginversionid=%s' % (pluginVersion.key().id()))
+        data['upload_url'] = upload_url
+        self.render('template/plugin/pluginUpload2.html', data)
+
+
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
         blob_info = upload_files[0]
-        pluginversionid=self.request.get('pluginversionid')
-        pluginversion=PluginVersion.get_by_id(int(pluginversionid))
+        pluginversionid = self.request.get('pluginversionid')
+        pluginversion = PluginVersion.get_by_id(int(pluginversionid))
         if pluginversion.datakey:
             b = BlobInfo.get(pluginversion.datakey)
             b.delete()
-        pluginversion.datakey=str(blob_info.key())
+        pluginversion.datakey = str(blob_info.key())
         pluginversion.size = blob_info.size
         pluginversion.put()
         self.redirect('/PluginUpload?id=%s' % pluginversionid)
 
 
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
-    def get(self, resource,start=None,end=None):
+    def get(self, resource, start=None, end=None):
         resource = str(urllib.unquote(resource))
         blob_info = blobstore.BlobInfo.get(resource)
         self.response.headers['Content-Length'] = blob_info.size
         if start and end:
             self.send_blob(blob_info, start=int(start), end=int(end))
         elif start:
-            self.send_blob(blob_info,start=int(start))
+            self.send_blob(blob_info, start=int(start))
         else:
             self.send_blob(blob_info)
+
 
 class PluginImageDel(Page):
     def get(self):
@@ -208,6 +213,8 @@ class PluginImageDel(Page):
                 return
         self.flush(getResult(id, False, u'图片删除失败，图片不存在。'))
         return
+
+
 class ImageDel(Page):
     def get(self):
         id = self.request.get('id', None)
@@ -218,10 +225,8 @@ class ImageDel(Page):
                 self.flush(getResult(id, True, u'图片删除成功。'))
                 return
 
-
         self.flush(getResult(id, False, u'图片删除失败，插件版本不存在。'))
         return
-
 
 
 class PluginList(Page):
@@ -285,7 +290,7 @@ class PluginDownload(Page):
             pv = PluginVersion.get_by_id(int(pvid))
             if pv:
                 if pv.datakey:
-                    self.redirect(str('%s/serve/%s' % (WebSiteUrl.getInitUrl(),pv.datakey)))
+                    self.redirect(str('%s/serve/%s' % (WebSiteUrl.getInitUrl(), pv.datakey)))
                     return
                 self.response.headers['Content-Type'] = 'application/octet-stream'
                 self.response.headers['Content-Length'] = pv.size
@@ -324,21 +329,20 @@ class PluginInfoUpdate(Page):
                     del pluginVersionDict[appcode]
         # 输出 json 字符串 plugin 对象
         if pluginVersionDict:
-            msg=[{"msg":u"新收到%s条插件更新信息"%(len(pluginVersionDict.keys()),),"type":1}]
+            msg = [{"msg": u"新收到%s条插件更新信息" % (len(pluginVersionDict.keys()),), "type": 1}]
         else:
-            msg=[]
-        result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[]}
+            msg = []
+        result = {'pluginlist': jsonToStr(pluginVersionDict), "notice": []}
         self.flush(result)
-
 
 
 class PluginInfoAll(Page):
     def get(self):
         pluginVersionDict = {}
-        query=Plugin.all().filter('isactive =',True)
-        appcode=self.request.get('appcode',None)
+        query = Plugin.all().filter('isactive =', True)
+        appcode = self.request.get('appcode', None)
         if appcode:
-            query.filter('appcode =',appcode)
+            query.filter('appcode =', appcode)
         for plugin in query.order('-lastUpdateTime'):
             if plugin.isdel:
                 pluginVersionDict[plugin.appcode] = {'isdel': plugin.isdel}
@@ -357,12 +361,15 @@ class PluginInfoAll(Page):
                     pluginVersionDict[plugin.appcode]['size'] = pluginVersion.size
                 if not pluginVersion.data and not pluginVersion.datakey:
                     del pluginVersionDict[plugin.appcode]
-        kindlist=[]
-        for i,kind in enumerate(Kind.get_by_id(getKindSort().kindlist)):
+        kindlist = []
+        for i, kind in enumerate(Kind.get_by_id(getKindSort().kindlist)):
             #kindlist.append({'name':kind.name,'index':kind.index,'list':filter(lambda x: x, kind.applist)})
-            kindlist.append({'name':kind.name,'index':i,'list':[getPluginByMemcache(x).appcode for x in kind.applist if getPluginByMemcache(x).isactive]})
+            kindlist.append({'name': kind.name, 'index': i,
+                             'list': [getPluginByMemcache(x).appcode for x in kind.applist if
+                                      getPluginByMemcache(x).isactive]})
         # 输出 json 字符串 plugin 对象
-        result={'pluginlist':jsonToStr(pluginVersionDict),"notice":[],'kind':kindlist,'status':200,'success':True,'message':u''}
+        result = {'pluginlist': jsonToStr(pluginVersionDict), "notice": [], 'kind': kindlist, 'status': 200,
+                  'success': True, 'message': u''}
         self.flush(result)
 
 
@@ -372,21 +379,24 @@ def jsonToStr(pluginVersionDict):
         if pluginVersionDict[k]['isdel']:
             jl.append({'appcode': k, 'isdel': True})
         else:
-            p = {'imglist': [], 'appcode': k, 'isdel': False, 'url':'%s/serve/%s' % (WebSiteUrl.getInitUrl(), pluginVersionDict[k]['pluginVersion'].datakey),
+            p = {'imglist': [], 'appcode': k, 'isdel': False,
+                 'url': '%s/serve/%s' % (WebSiteUrl.getInitUrl(), pluginVersionDict[k]['pluginVersion'].datakey),
                  'updateDesc': pluginVersionDict[k]['pluginVersion'].updateDesc,
                  'newversionname': pluginVersionDict[k]['pluginVersion'].versioncode,
                  'newversion': pluginVersionDict[k]['newversionnum'], 'name': pluginVersionDict[k]['plugin'].name,
-                  'desc': pluginVersionDict[k]['plugin'].desc,
-                  'iconurl': '%s/download?image_id=%s' % (WebSiteUrl.getInitUrl(), pluginVersionDict[k]['plugin'].imageid),
-                  'size': pluginVersionDict[k]['pluginVersion'].size,
+                 'desc': pluginVersionDict[k]['plugin'].desc,
+                 'iconurl': '%s/download?image_id=%s' % (
+                     WebSiteUrl.getInitUrl(), pluginVersionDict[k]['plugin'].imageid),
+                 'size': pluginVersionDict[k]['pluginVersion'].size,
                  'lastUpdate': pluginVersionDict[k]['pluginVersion'].date.strftime('%Y-%m-%d %H:%M')}
             if not p['size']:
                 blob_info = blobstore.BlobInfo.get(pluginVersionDict[k]['pluginVersion'].datakey)
-                p['size']=blob_info.size
-                pluginVersionDict[k]['pluginVersion'].size=blob_info.size
+                p['size'] = blob_info.size
+                pluginVersionDict[k]['pluginVersion'].size = blob_info.size
                 pluginVersionDict[k]['pluginVersion'].put()
             for i, imgid in enumerate(pluginVersionDict[k]['pluginVersion'].imageids):
-                p['imglist'].append({'appversion':pluginVersionDict[k]['newversionnum'],'index': i+1, 'url': '%s/download?image_id=%s' % (WebSiteUrl.getInitUrl(), imgid)})
+                p['imglist'].append({'appversion': pluginVersionDict[k]['newversionnum'], 'index': i + 1,
+                                     'url': '%s/download?image_id=%s' % (WebSiteUrl.getInitUrl(), imgid)})
             jl.append(p)
     return jl
 
@@ -395,9 +405,21 @@ class PluginSearch(Page):
     def get(self):
         pass
 
+
 def getPluginByMemcache(id):
-    p = memcache.get('pluginid%s'%id)
-    if not p :
+    p = memcache.get('pluginid%s' % id)
+    if not p:
         p = Plugin.get_by_id(int(id))
-        memcache.set('pluginid%s'%id,p,3600*24*10)
+        memcache.set('pluginid%s' % id, p, 3600 * 24 * 10)
     return p
+
+
+class GetPluginNameByGamecode(Page):
+    def get(self):
+        gamecode = self.request.get('gamecode', None)
+        plugin = memcache.get('gamecode%s' % gamecode)
+        if not plugin:
+            plugin = Plugin.all().filter('appcode =', gamecode).fetch(1)
+            memcache.set('gamecode%s' % gamecode, plugin, 3600 * 24 * 10)
+        result = "plugindata['%s']='%s';pluginimgdata['%s']='%s';" % (gamecode, plugin.name,gamecode, plugin.imageid)
+        self.flush(result)

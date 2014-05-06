@@ -45,6 +45,8 @@ app = webapp2.WSGIApplication([
                                   ('/PluginVersionDelete', PluginVersionDelete),
                                   ('/PluginDetail', PluginDetail),
 
+
+
                                   ('/upload', UploadHandler),
                                   ('/PluginUploadScript', PluginUploadScript),
                                   ('/PluginUploadApkScript', PluginUploadApkScript),
@@ -87,5 +89,7 @@ app = webapp2.WSGIApplication([
                                   ('/KindPluginDelete',KindPluginDelete),
 
 
+                                    #以js的形式提供接口
+                                  ('/getPluginNameByGamecode'),
 
                               ], debug=True)
