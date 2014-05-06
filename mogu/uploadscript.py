@@ -64,7 +64,7 @@ class PluginUploadScript(Page):
 
         versioncode = self.request.get('versioncode', '')
         versionnum = self.request.get('versionnum', '')
-        updateDesc = self.request.get('updateDesc', '')
+        updateDesc = self.request.get('updateDesc', '……')
 
         pluginVersion = PluginVersion()
         pluginVersion.plugin = int(pluginid)

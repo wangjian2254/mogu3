@@ -1,5 +1,6 @@
 #coding=utf-8
 #
+from setting import RankUri
 
 __author__ = u'王健'
 from models.model import Users
@@ -116,5 +117,5 @@ class Top(Page):
 class Menu(Page):
   @login_required
   def get(self):
-      self.render('template/menu.html',{})
+      self.render('template/menu.html',{'RankUri':RankUri})
   

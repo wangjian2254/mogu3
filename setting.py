@@ -17,3 +17,6 @@ WEBURL='http://plugins.mmggoo.com'
 AppPhoneVerson='1.1'
 #蘑菇网手机端应用下载页面
 AppPhoneUri='http://download.mmggoo.com'
+
+#积分网址
+RankUri = 'http://gamerank.mmggoo.com'
