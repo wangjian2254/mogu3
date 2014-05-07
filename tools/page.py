@@ -20,7 +20,7 @@ class Page(webapp2.RequestHandler):
 #        self.response.out.write(template.render(path,template_value))
 
     def flush(self,jsonobj):
-        if isinstance(jsonobj,str):
+        if isinstance(jsonobj,(str,unicode)):
             self.response.out.write(jsonobj)
         else:
             self.response.out.write(json.dumps(jsonobj))

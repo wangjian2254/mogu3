@@ -421,6 +421,9 @@ class GetPluginNameByGamecode(Page):
         plugin = memcache.get('appcode%s' % appcode)
         if not plugin:
             plugin = Plugin.all().filter('appcode =', appcode).fetch(1)
+            if plugin:
+                plugin = plugin[0]
             memcache.set('appcode%s' % appcode, plugin, 3600 * 24 * 10)
-        result = "plugindata['%s']='%s';pluginimgdata['%s']='%s';" % (appcode, plugin.name,appcode, plugin.imageid)
+        result = "plugindata['%s']='%s'; pluginimgdata['%s']='%s';" % (appcode.replace('.','_'), plugin.name,appcode.replace('.','_'), plugin.imageid)
+        self.response.headers['Content-Type'] = 'text/javascript'
         self.flush(result)
