@@ -21,7 +21,10 @@ from mogu.kind import KindList, KindUpdate, KindDelete, KindAddPlugin, KindMove,
 from mogu.login import Login, Top, Menu
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
-from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, ServeHandler, PluginUpload2
+from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, \
+    PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, \
+    ServeHandler, PluginUpload2, \
+    GetPluginNameByGamecode
 from mogu.uploadscript import PluginUploadScript, PluginUploadApkScript, PluginUploadApkDataScript
 from mogu.user import UserLogin, UserRegister
 from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
@@ -46,7 +49,6 @@ app = webapp2.WSGIApplication([
                                   ('/PluginDetail', PluginDetail),
 
 
-
                                   ('/upload', UploadHandler),
                                   ('/PluginUploadScript', PluginUploadScript),
                                   ('/PluginUploadApkScript', PluginUploadApkScript),
@@ -62,34 +64,34 @@ app = webapp2.WSGIApplication([
                                   ('/PluginSearch', PluginSearch),
 
                                   # 系统消息管理 接口
-                                  ('/NoticeList',NoticeList),
-                                  ('/NoticeUpdate',NoticeUpdate),
-                                  ('/NoticeDelete',NoticeDelete),
-                                  ('/NoticeDetail',NoticeDetail),
+                                  ('/NoticeList', NoticeList),
+                                  ('/NoticeUpdate', NoticeUpdate),
+                                  ('/NoticeDelete', NoticeDelete),
+                                  ('/NoticeDetail', NoticeDetail),
 
                                   # 系统消息 手机接口
-                                  ('/NoticeInfoUpdate',NoticeInfoUpdate),
+                                  ('/NoticeInfoUpdate', NoticeInfoUpdate),
 
                                   # 图片下载 手机接口
-                                  ('/download',ImageDownload),
-                                  ('/ImageDel',ImageDel),
-                                  ('/WebsiteList',WebsiteList),
-                                  ('/WebsiteUpdate',WebsiteUpdate),
-                                  ('/WebsiteDelete',WebsiteDelete),
+                                  ('/download', ImageDownload),
+                                  ('/ImageDel', ImageDel),
+                                  ('/WebsiteList', WebsiteList),
+                                  ('/WebsiteUpdate', WebsiteUpdate),
+                                  ('/WebsiteDelete', WebsiteDelete),
 
-                                  ('/KindList',KindList),
-                                  ('/FenKindList',FenKindList),
-                                  ('/FenKindPlugin',FenKindPlugin),
+                                  ('/KindList', KindList),
+                                  ('/FenKindList', FenKindList),
+                                  ('/FenKindPlugin', FenKindPlugin),
 
-                                  ('/KindUpdate',KindUpdate),
-                                  ('/KindAddPlugin',KindAddPlugin),
-                                  ('/KindDelete',KindDelete),
-                                  ('/KindMove',KindMove),
-                                  ('/KindPluginMove',KindPluginMove),
-                                  ('/KindPluginDelete',KindPluginDelete),
+                                  ('/KindUpdate', KindUpdate),
+                                  ('/KindAddPlugin', KindAddPlugin),
+                                  ('/KindDelete', KindDelete),
+                                  ('/KindMove', KindMove),
+                                  ('/KindPluginMove', KindPluginMove),
+                                  ('/KindPluginDelete', KindPluginDelete),
 
 
-                                    #以js的形式提供接口
-                                  ('/getPluginNameByGamecode'),
+                                  #以js的形式提供接口
+                                  ('/getPluginNameByGamecode', GetPluginNameByGamecode),
 
                               ], debug=True)

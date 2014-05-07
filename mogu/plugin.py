@@ -11,6 +11,7 @@ from google.appengine.ext.webapp import blobstore_handlers
 from mogu.kind import getKindSort
 from mogu.login import login_required
 from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind
+from setting import RankUri
 from tools.page import Page
 from tools.util import getResult
 
@@ -232,7 +233,7 @@ class ImageDel(Page):
 class PluginList(Page):
     def get(self):
         pluginList = Plugin.all().filter('isdel =', False).order('-date')
-        self.render('template/plugin/pluginList.html', {'pluginList': pluginList})
+        self.render('template/plugin/pluginList.html', {'pluginList': pluginList,'RankUri':RankUri})
 
 
 class PluginDetail(Page):
@@ -416,10 +417,10 @@ def getPluginByMemcache(id):
 
 class GetPluginNameByGamecode(Page):
     def get(self):
-        gamecode = self.request.get('gamecode', None)
-        plugin = memcache.get('gamecode%s' % gamecode)
+        appcode = self.request.get('appcode', None)
+        plugin = memcache.get('appcode%s' % appcode)
         if not plugin:
-            plugin = Plugin.all().filter('appcode =', gamecode).fetch(1)
-            memcache.set('gamecode%s' % gamecode, plugin, 3600 * 24 * 10)
-        result = "plugindata['%s']='%s';pluginimgdata['%s']='%s';" % (gamecode, plugin.name,gamecode, plugin.imageid)
+            plugin = Plugin.all().filter('appcode =', appcode).fetch(1)
+            memcache.set('appcode%s' % appcode, plugin, 3600 * 24 * 10)
+        result = "plugindata['%s']='%s';pluginimgdata['%s']='%s';" % (appcode, plugin.name,appcode, plugin.imageid)
         self.flush(result)

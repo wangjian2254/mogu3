@@ -50,7 +50,12 @@
     <td align="center">{{plugin.date|datetimeformat}}</td>
     <td align="center">{{plugin.lastUpdateTime|datetimeformat}}</td>
     <td align="center">{% if plugin.isdel%}已删除{%else%}{%if plugin.isactive%}正常{%else%}缺少资料{%endif%}{%endif%}</td>
-    <td align="center"><a href="/PluginUpdate?id={{plugin.key().id()}}"><img src="/image/update.gif"  border="0"/></a>&nbsp;|&nbsp;<a href="javascript:delPlugin('{{plugin.key().id()}}')"><img src="/image/del.gif"  border="0"/></a>&nbsp;|&nbsp;<a href="/PluginUpload?pluginid={{plugin.key().id()}}">上传新版本</a></td>
+    <td align="center">
+        <a href="/PluginUpdate?id={{plugin.key().id()}}"><img src="/image/update.gif"  border="0"/></a>&nbsp;|&nbsp;
+        <a href="javascript:delPlugin('{{plugin.key().id()}}')"><img src="/image/del.gif"  border="0"/></a>&nbsp;|&nbsp;
+        <a href="/PluginUpload?pluginid={{plugin.key().id()}}">上传新版本</a>&nbsp;|&nbsp;
+        <a href="{{RankUri}}/RankCreate?appcode={{plugin.appcode}}" target="_blank">设置等级</a>&nbsp;|&nbsp;
+    </td>
     </tr>
     {%endfor%}
 </table>
