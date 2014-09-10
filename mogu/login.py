@@ -83,7 +83,7 @@ class Login(Page):
         username=self.request.get('username')
         password=self.request.get('password')
         fromurl=self.request.get('fromurl',None)
-        if Users.all().count()==0:
+        if len(Users.all().fetch(1))==0:
             u=Users()
             u.name='admin'
             u.username='admin@gmail.com'
@@ -103,6 +103,34 @@ class Login(Page):
             self.redirect('/')
 
 
+class RegUser(Page):
+    def get(self, *args):
+        self.render('template/regUser.html', {})
+
+    def post(self, *args):
+        username=self.request.get('username')
+        password=self.request.get('password')
+        password2=self.request.get('password2')
+
+        if password != password2:
+            self.render('template/regUser.html', {"error_message":u'密码和确认密码不一致','error':True})
+            return
+
+        user=Users.all().filter('username =',username).fetch(1)
+        if user:
+            self.render('template/regUser.html', {"error_message":u'用户名已经被占用，请换一个用户名','error':True})
+            return
+        else:
+            u=Users()
+            u.name=username
+            u.username=username
+            u.password=password
+            u.auth='user'
+            u.put()
+            setLogin(self,u)
+            self.render('template/workframe.html', {})
+
+
 class Logout(Page):
     def get(self, *args):
         fromurl='/'
@@ -117,5 +145,10 @@ class Top(Page):
 class Menu(Page):
   @login_required
   def get(self):
-      self.render('template/menu.html',{'RankUri':RankUri})
+      user = get_current_user(self)
+      if user.auth == 'admin':
+          self.render('template/menu.html',{'RankUri':RankUri})
+      if user.auth == 'user':
+          self.render('template/menu2.html',{'RankUri':RankUri})
+
   

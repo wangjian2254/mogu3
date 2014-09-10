@@ -18,7 +18,7 @@
 import webapp2
 from mogu.kind import KindList, KindUpdate, KindDelete, KindAddPlugin, KindMove, KindPluginDelete, KindPluginMove, \
     FenKindList, FenKindPlugin
-from mogu.login import Login, Top, Menu
+from mogu.login import Login, Top, Menu, RegUser
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
 from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, \
@@ -33,6 +33,7 @@ from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
 app = webapp2.WSGIApplication([
                                   ('/', Login),
                                   ('/login', Login),
+                                  ('/regUser', RegUser),
                                   ('/top', Top),
                                   ('/menu', Menu),
                                   ('/UserLogin', UserLogin),

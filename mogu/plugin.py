@@ -9,8 +9,8 @@ from google.appengine.ext import db
 from google.appengine.ext.blobstore import blobstore, BlobInfo
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.kind import getKindSort
-from mogu.login import login_required
-from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind
+from mogu.login import login_required, get_current_user
+from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind, Users
 from setting import RankUri
 from tools.page import Page
 from tools.util import getResult
@@ -19,21 +19,31 @@ __author__ = u'王健'
 
 timezone = datetime.timedelta(hours=8)
 
+def getApkKind():
+    kindlist = []
+    for kind in Kind.get_by_id(getKindSort().kindlist):
+        if not kind:
+            continue
+        kindlist.append(kind)
+    return kindlist
 
 class PluginUpdate(Page):
     @login_required
     def get(self):
         id = self.request.get('id', None)
+        kindlist = getApkKind()
         plugin = {}
         if id:
             plugin = Plugin.get_by_id(int(id))
 
-        self.render('template/plugin/pluginUpdate.html', {'plugin': plugin, 'id': id})
+        self.render('template/plugin/pluginUpdate.html', {'plugin': plugin, 'id': id, 'kindlist':kindlist})
 
     def post(self):
         noteupdate = datetime.datetime.utcnow() + timezone
         id = self.request.get('id', None)
         name = self.request.get('name', None)
+        kindid = self.request.get('kind', '0')
+        kindlist = getApkKind()
         # kind = self.request.get('kind', None)
         # kinds = []
         # if kind:
@@ -45,16 +55,18 @@ class PluginUpdate(Page):
             plugin = Plugin.get_by_id(int(id))
         else:
             plugin = Plugin()
+            user = get_current_user(self)
+            plugin.username = user.username
 
         plugin.name = name
-        # plugin.kinds = kinds
+        plugin.kindid = int(kindid)
         plugin.code = code
         plugin.appcode = appcode
         plugin.desc = desc
         plugin.lastUpdateTime = noteupdate
         if not id and 0 < Plugin.all().filter('appcode =', appcode).count():
             self.render('template/plugin/pluginUpdate.html',
-                        {'plugin': plugin, 'id': id, 'result': 'warning', 'msg': u'插件包名已经存在。'})
+                        {'plugin': plugin, 'id': id, 'result': 'warning', 'msg': u'插件包名已经存在。', 'kindlist':kindlist})
             return
         imgfield = self.request.POST.get('icon')
         if hasattr(imgfield, 'type'):
@@ -69,7 +81,7 @@ class PluginUpdate(Page):
                 plugin.imageid = imgfile.key().id()
         plugin.put()
         self.render('template/plugin/pluginUpdate.html',
-                    {'plugin': plugin, 'id': plugin.key().id(), 'result': 'succeed', 'msg': u'修改成功。'})
+                    {'plugin': plugin, 'id': plugin.key().id(), 'result': 'succeed', 'msg': u'修改成功。', 'kindlist':kindlist})
 
 
 class PluginUpload(Page):
@@ -178,6 +190,14 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
             b.delete()
         pluginversion.datakey = str(blob_info.key())
         pluginversion.size = blob_info.size
+        plugin = Plugin.get_by_id(pluginversion.plugin)
+        if plugin.username:
+            userquery=Users.all().filter('username =',plugin.username).fetch(1)
+            if len(userquery)>0:
+                if userquery[0].auth == 'user':
+                    pluginversion.check_status = 1
+        else:
+            pluginversion.check_status = 0
         pluginversion.put()
         self.redirect('/PluginUpload?id=%s' % pluginversionid)
 
@@ -232,8 +252,12 @@ class ImageDel(Page):
 
 class PluginList(Page):
     def get(self):
-        pluginList = Plugin.all().filter('isdel =', False).order('-date')
-        self.render('template/plugin/pluginList.html', {'pluginList': pluginList,'RankUri':RankUri})
+        user = get_current_user(self)
+        if user.auth == 'admin':
+            pluginList = Plugin.all().filter('isdel =', False).order('-date')
+        if user.auth == 'user':
+            pluginList = Plugin.all().filter('isdel =', False).filter("username =", user.username).order('-date')
+        self.render('template/plugin/pluginList.html', {'pluginList': pluginList,'RankUri':RankUri, 'user': user})
 
 
 class PluginDetail(Page):

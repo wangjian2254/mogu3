@@ -84,6 +84,9 @@ class Plugin(db.Model):
     imageid = db.IntegerProperty(indexed=False)
     isactive=db.BooleanProperty(default=False)
 
+    username = db.StringProperty() #隶属用户
+    kindid = db.IntegerProperty() #应用分类
+
     def put(self,**kwargs):
 
         if self.name and self.code and self.appcode and self.desc and self.imageid:
@@ -105,11 +108,13 @@ class PluginVersion(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)  #//提交时间
     imageids = db.ListProperty(item_type=int)
 
+    check_status = db.IntegerProperty() #如果是第三方上传的，需要标记为 未破解。在破解过后，再取消标记。
+
     def put(self,**kwargs):
 
         super(PluginVersion, self).put(**kwargs)
         p = Plugin.get_by_id(self.plugin)
-        if self.versioncode and self.versionnum and (self.data or self.datakey) and self.updateDesc and len(self.imageids) :
+        if self.versioncode and self.versionnum and (self.data or self.datakey) and self.updateDesc and len(self.imageids) and self.check_status == 0 :
             p.isactive = True
         else:
             p.isactive = False
