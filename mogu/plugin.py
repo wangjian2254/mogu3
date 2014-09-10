@@ -21,9 +21,7 @@ timezone = datetime.timedelta(hours=8)
 
 def getApkKind():
     kindlist = []
-    for kind in Kind.get_by_id(getKindSort().kindlist):
-        if not kind:
-            continue
+    for kind in Kind.all().filter('type =','1'):
         kindlist.append(kind)
     return kindlist
 
@@ -51,6 +49,7 @@ class PluginUpdate(Page):
         code = self.request.get('code', None)
         appcode = self.request.get('appcode', None)
         desc = self.request.get('desc', None)
+        type = self.request.get('type', '0')
         if id:
             plugin = Plugin.get_by_id(int(id))
         else:
@@ -58,6 +57,7 @@ class PluginUpdate(Page):
             user = get_current_user(self)
             plugin.username = user.username
 
+        plugin.type = type
         plugin.name = name
         plugin.kindid = int(kindid)
         plugin.code = code

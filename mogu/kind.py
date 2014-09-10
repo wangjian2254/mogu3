@@ -43,6 +43,7 @@ class KindUpdate(Page):
     def get(self):
         index = self.request.get('index','0')
         name = self.request.get('name','')
+        type = self.request.get('type',None)
         id = self.request.get('id','')
         url = self.request.get('url','KindList')
         if id:
@@ -52,6 +53,7 @@ class KindUpdate(Page):
             kind = Kind()
         kind.index = int(index)
         kind.name = name
+        kind.type = type
         kind.put()
         ks = getKindSort()
         if kind.key().id() in  ks.kindlist:

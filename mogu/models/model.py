@@ -71,6 +71,7 @@ class KindSort(db.Model):
     kindlist = db.ListProperty(item_type=int,indexed=False)
 class Kind(db.Model):
     name = db.StringProperty()
+    type = db.StringProperty() #用户可选 1:用户可选
     applist = db.ListProperty(item_type=int,indexed=False)
 
 class Plugin(db.Model):
@@ -86,6 +87,7 @@ class Plugin(db.Model):
 
     username = db.StringProperty() #隶属用户
     kindid = db.IntegerProperty() #应用分类
+    type = db.StringProperty() #应用 类型 0：单机 1:积分 2：多人
 
     def put(self,**kwargs):
 
