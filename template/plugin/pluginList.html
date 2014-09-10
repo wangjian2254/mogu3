@@ -45,7 +45,7 @@
     <td align="center">{{loop.index}}</td>
     <td align="center"><a href="/PluginDetail?id={{plugin.key().id()}}">{{plugin.name}}</a></td>
     <td><div style="margin: 5px;float: left;"><img id="img{{img}}" src="/download?image_id={{plugin.imageid}}" border="0"></div></td>
-    <td>{{plugin.code}}</td>
+    <td>{{plugin.code}}{%if not plugin.username or plugin.username=='admin'%}(蘑菇平台){%else%}({{plugin.username}}){%endif%}</td>
     <td align="center">{{plugin.appcode}}</td>
     <td align="center">{{plugin.date|datetimeformat}}</td>
     <td align="center">{{plugin.lastUpdateTime|datetimeformat}}</td>
