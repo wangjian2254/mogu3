@@ -1,4 +1,4 @@
-#coding=utf-8
+# coding=utf-8
 #author:u'王健'
 #Date: 13-6-1
 #Time: 下午9:21
@@ -10,10 +10,11 @@ __author__ = u'王健'
 
 from google.appengine.ext import db
 
+
 class WebSiteUrl(db.Model):
-    '''
+    """
     网站域名，方便使用 快速的域名
-    '''
+    """
     url = db.URLProperty()
     updateTime = db.DateTimeProperty(auto_now=True)
 
@@ -24,7 +25,7 @@ class WebSiteUrl(db.Model):
             u = cls.all().order('-updateTime').fetch(1)
             if len(u):
                 url = u[0].url
-                memcache.set('usedurl',u[0].url,3600*24*10)
+                memcache.set('usedurl', u[0].url, 3600 * 24 * 10)
             else:
                 u = WebSiteUrl()
                 u.url = 'http://localhost:8180'
@@ -32,47 +33,33 @@ class WebSiteUrl(db.Model):
                 url = u.url
         return str(url)
 
-    def delete(self,**kwargs):
+    def delete(self, **kwargs):
         super(WebSiteUrl, self).delete(**kwargs)
         memcache.delete('usedurl')
-    def put(self,**kwargs):
-        super(WebSiteUrl, self).put(**kwargs)
-        memcache.set('usedurl',self.url,3600*24*10)
 
-#记录最新的用户名
-class UserNameNumber(db.Model):
-    userName = db.IntegerProperty(indexed=False)
+    def put(self, **kwargs):
+        super(WebSiteUrl, self).put(**kwargs)
+        memcache.set('usedurl', self.url, 3600 * 24 * 10)
+
 
 
 class Users(db.Model):
-    name = db.StringProperty()#本站昵称
+    name = db.StringProperty()  #本站昵称
     username = db.EmailProperty()
     password = db.StringProperty()
     auth = db.StringProperty()
 
 
-class User(db.Model): #//用户表
-    userName = db.StringProperty() #//用户名
-    passWord = db.StringProperty()  #//密码
-    date = db.DateTimeProperty(auto_now_add=True)  #//注册时间
-    lastUpdateTime = db.DateTimeProperty(auto_now=True) #//最后一次修改时间
-
-    @classmethod
-    def get_by_keyname(cls, key_names, parent=None, **kwargs):
-        n = 'u' + str(len(key_names) - 1) + key_names
-        u = cls.get_by_key_name(key_names=n, parent=parent, **kwargs)
-        if not u:
-            return cls.get_by_key_name(key_names=key_names, parent=parent, **kwargs)
-        else:
-            return u
-
 
 class KindSort(db.Model):
-    kindlist = db.ListProperty(item_type=int,indexed=False)
+    kindlist = db.ListProperty(item_type=int, indexed=False)
+
+
 class Kind(db.Model):
     name = db.StringProperty()
-    type = db.StringProperty() #用户可选 1:用户可选
-    applist = db.ListProperty(item_type=int,indexed=False)
+    type = db.StringProperty()  #用户可选 1:用户可选
+    # applist = db.ListProperty(item_type=int, indexed=False)
+
 
 class Plugin(db.Model):
     name = db.StringProperty()
@@ -80,23 +67,31 @@ class Plugin(db.Model):
     appcode = db.StringProperty()
     desc = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)  #//创建时间
-    lastUpdateTime = db.DateTimeProperty(auto_now=True) #//最后一次修改时间
+    lastUpdateTime = db.DateTimeProperty(auto_now=True)  #//最后一次修改时间
     isdel = db.BooleanProperty(default=False)
     imageid = db.IntegerProperty(indexed=False)
-    isactive=db.BooleanProperty(default=False)
+    isactive = db.BooleanProperty(default=False)
 
-    username = db.StringProperty() #隶属用户
-    kindid = db.IntegerProperty() #应用分类
-    type = db.StringProperty() #应用 类型 0：单机 1:积分 2：多人
+    username = db.StringProperty()  #隶属用户
+    kindids = db.ListProperty(item_type=int)  #应用分类
+    type = db.StringProperty()  #应用 类型 0：单机 1:积分 2：多人
+    index_time = db.DateTimeProperty()  #//排序时间，默认等于apk最新提交时间
+    downnum = db.IntegerProperty()  #插件下载次数
 
-    def put(self,**kwargs):
+    def put(self, **kwargs):
 
         if self.name and self.code and self.appcode and self.desc and self.imageid:
             pass
         else:
             self.isactive = False
         super(Plugin, self).put(**kwargs)
-        memcache.delete('pluginid%s'%self.key().id())
+        memcache.delete('pluginid%s' % self.key().id())
+
+
+# class PluginDownloadNum(db.Model):
+#     # plugin = db.IntegerProperty() #插件id 使用key_name='pluginid_%s'%id
+#     kindid = db.IntegerProperty()  #插件分类
+#     downnum = db.IntegerProperty()  #插件下载次数
 
 
 class PluginVersion(db.Model):
@@ -105,18 +100,19 @@ class PluginVersion(db.Model):
     versionnum = db.IntegerProperty()
     data = db.BlobProperty()
     size = db.IntegerProperty()
-    datakey=db.StringProperty(indexed=False)
+    datakey = db.StringProperty(indexed=False)
     updateDesc = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)  #//提交时间
     imageids = db.ListProperty(item_type=int)
 
-    check_status = db.IntegerProperty() #如果是第三方上传的，需要标记为 未破解。在破解过后，再取消标记。
+    check_status = db.IntegerProperty()  #如果是第三方上传的，需要标记为 未破解。在破解过后，再取消标记。
 
-    def put(self,**kwargs):
+    def put(self, **kwargs):
 
         super(PluginVersion, self).put(**kwargs)
         p = Plugin.get_by_id(self.plugin)
-        if self.versioncode and self.versionnum and (self.data or self.datakey) and self.updateDesc and len(self.imageids) and self.check_status == 0 :
+        if self.versioncode and self.versionnum and (self.data or self.datakey) and self.updateDesc and len(
+                self.imageids) and self.check_status == 0:
             p.isactive = True
         else:
             p.isactive = False
@@ -145,7 +141,7 @@ class Notice(db.Model):
     type = db.IntegerProperty()
     plugin = db.IntegerProperty()
     pluginimg = db.IntegerProperty()
-    lastUpdateTime = db.DateTimeProperty() #//最后一次修改时间
+    lastUpdateTime = db.DateTimeProperty()  #//最后一次修改时间
     startdate = db.DateTimeProperty(auto_now_add=True)  #//开始时间
     enddate = db.DateTimeProperty()  #//提交时间
     isdel = db.BooleanProperty(default=False)

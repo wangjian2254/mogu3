@@ -10,7 +10,7 @@ from google.appengine.ext.blobstore import blobstore, BlobInfo
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.kind import getKindSort
 from mogu.login import login_required, get_current_user
-from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind, Users
+from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind, Users, PluginDownloadNum
 from setting import RankUri
 from tools.page import Page
 from tools.util import getResult
@@ -205,6 +205,13 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
 class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, resource, start=None, end=None):
         resource = str(urllib.unquote(resource))
+        pvquery=PluginVersion.all().filter('datakey =',resource).fetch(1)
+        if len(pvquery)>0:
+            pv = pvquery[0]
+            plugin = PluginDownloadNum.get_by_key_name('pluginid_%s'%pv.plugin)
+            if plugin:
+                plugin.downnum+=1
+                plugin.put()
         blob_info = blobstore.BlobInfo.get(resource)
         self.response.headers['Content-Length'] = blob_info.size
         if start and end:
