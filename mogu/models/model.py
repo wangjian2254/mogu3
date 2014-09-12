@@ -60,6 +60,8 @@ class Kind(db.Model):
     type = db.StringProperty()  #用户可选 1:用户可选
     # applist = db.ListProperty(item_type=int, indexed=False)
 
+class PluginCount(db.Model):
+    num = db.IntegerProperty(indexed=False, default=0)
 
 class Plugin(db.Model):
     name = db.StringProperty()
@@ -79,13 +81,28 @@ class Plugin(db.Model):
     downnum = db.IntegerProperty()  #插件下载次数
 
     def put(self, **kwargs):
-
+        if not self.key() or not self.key().id():
+            flag = True
+        else:
+            flag = False
         if self.name and self.code and self.appcode and self.desc and self.imageid:
             pass
         else:
             self.isactive = False
         super(Plugin, self).put(**kwargs)
+        pluginCount = PluginCount.get_or_insert('plugin_count')
+        if flag:
+            pluginCount.num += 1
+            pluginCount.put()
+
         memcache.delete('pluginid%s' % self.key().id())
+        memcache.delete('user_applist_%s' % (self.username))
+        l = []
+        for i in range(0, pluginCount.num % 30):
+            l.append('applist_%s'% i)
+        l.append('applist_%s'% len(l))
+        memcache.delete_multi(l)
+
 
 
 # class PluginDownloadNum(db.Model):

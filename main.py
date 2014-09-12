@@ -16,53 +16,55 @@
 # limitations under the License.
 #
 import webapp2
-from mogu.kind import KindList, KindUpdate, KindDelete, KindAddPlugin, KindMove, KindPluginDelete, KindPluginMove, \
-    FenKindList, FenKindPlugin
-from mogu.login import Login, Top, Menu, RegUser
+# from mogu.kind import KindList, KindUpdate, KindDelete, KindAddPlugin, KindMove, KindPluginDelete, KindPluginMove, \
+#     FenKindList, FenKindPlugin
+from mogu3.login import Login, RegUser, Logout
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
 from mogu.picture import ImageDownload
-from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, \
-    PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, \
-    ServeHandler, PluginUpload2, \
-    GetPluginNameByGamecode
-from mogu.uploadscript import PluginUploadScript, PluginUploadApkScript, PluginUploadApkDataScript
-from mogu.user import UserLogin, UserRegister
-from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
+# from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, \
+#     PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, \
+#     ServeHandler, PluginUpload2, \
+#     GetPluginNameByGamecode
+# from mogu.uploadscript import PluginUploadScript, PluginUploadApkScript, PluginUploadApkDataScript
+# from mogu.user import UserLogin, UserRegister
+# from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
+from mogu3.views import Menu, CurrentUser, PluginList
 
 
 app = webapp2.WSGIApplication([
-                                  ('/', Login),
                                   ('/login', Login),
+                                  ('/logout', Logout),
                                   ('/regUser', RegUser),
-                                  ('/top', Top),
-                                  ('/menu', Menu),
-                                  ('/UserLogin', UserLogin),
-                                  ('/UserRegister', UserRegister),
+                                  # ('/top', Top),
+                                  ('/menu.xml', Menu),
+                                  ('/currentUser', CurrentUser),
+                                  # ('/UserLogin', UserLogin),
+                                  # ('/UserRegister', UserRegister),
 
                                   # 插件管理 接口
                                   ('/PluginList', PluginList),
-                                  ('/PluginUpdate', PluginUpdate),
-                                  ('/PluginUpload', PluginUpload),
-                                  ('/PluginUpload2', PluginUpload2),
-                                  ('/PluginImageDel', PluginImageDel),
-                                  ('/PluginDelete', PluginDelete),
-                                  ('/PluginVersionDelete', PluginVersionDelete),
-                                  ('/PluginDetail', PluginDetail),
-
-
-                                  ('/upload', UploadHandler),
-                                  ('/PluginUploadScript', PluginUploadScript),
-                                  ('/PluginUploadApkScript', PluginUploadApkScript),
-                                  ('/PluginUploadApkDataScript', PluginUploadApkDataScript),
-                                  ('/serve/([^/]+)?/([0-9]+)?/([0-9]+)?/$', ServeHandler),
-                                  ('/serve/([^/]+)?', ServeHandler),
-
-
-                                  #插件 手机端接口
-                                  ('/PluginDownload', PluginDownload),
-                                  ('/PluginInfoUpdate', PluginInfoUpdate),
-                                  ('/PluginInfoAll', PluginInfoAll),
-                                  ('/PluginSearch', PluginSearch),
+                                  # ('/PluginUpdate', PluginUpdate),
+                                  # ('/PluginUpload', PluginUpload),
+                                  # ('/PluginUpload2', PluginUpload2),
+                                  # ('/PluginImageDel', PluginImageDel),
+                                  # ('/PluginDelete', PluginDelete),
+                                  # ('/PluginVersionDelete', PluginVersionDelete),
+                                  # ('/PluginDetail', PluginDetail),
+                                  #
+                                  #
+                                  # ('/upload', UploadHandler),
+                                  # ('/PluginUploadScript', PluginUploadScript),
+                                  # ('/PluginUploadApkScript', PluginUploadApkScript),
+                                  # ('/PluginUploadApkDataScript', PluginUploadApkDataScript),
+                                  # ('/serve/([^/]+)?/([0-9]+)?/([0-9]+)?/$', ServeHandler),
+                                  # ('/serve/([^/]+)?', ServeHandler),
+                                  #
+                                  #
+                                  # #插件 手机端接口
+                                  # ('/PluginDownload', PluginDownload),
+                                  # ('/PluginInfoUpdate', PluginInfoUpdate),
+                                  # ('/PluginInfoAll', PluginInfoAll),
+                                  # ('/PluginSearch', PluginSearch),
 
                                   # 系统消息管理 接口
                                   ('/NoticeList', NoticeList),
@@ -75,24 +77,24 @@ app = webapp2.WSGIApplication([
 
                                   # 图片下载 手机接口
                                   ('/download', ImageDownload),
-                                  ('/ImageDel', ImageDel),
-                                  ('/WebsiteList', WebsiteList),
-                                  ('/WebsiteUpdate', WebsiteUpdate),
-                                  ('/WebsiteDelete', WebsiteDelete),
-
-                                  ('/KindList', KindList),
-                                  ('/FenKindList', FenKindList),
-                                  ('/FenKindPlugin', FenKindPlugin),
-
-                                  ('/KindUpdate', KindUpdate),
-                                  ('/KindAddPlugin', KindAddPlugin),
-                                  ('/KindDelete', KindDelete),
-                                  ('/KindMove', KindMove),
-                                  ('/KindPluginMove', KindPluginMove),
-                                  ('/KindPluginDelete', KindPluginDelete),
+                                  # ('/ImageDel', ImageDel),
+                                  # ('/WebsiteList', WebsiteList),
+                                  # ('/WebsiteUpdate', WebsiteUpdate),
+                                  # ('/WebsiteDelete', WebsiteDelete),
+                                  #
+                                  # ('/KindList', KindList),
+                                  # ('/FenKindList', FenKindList),
+                                  # ('/FenKindPlugin', FenKindPlugin),
+                                  #
+                                  # ('/KindUpdate', KindUpdate),
+                                  # ('/KindAddPlugin', KindAddPlugin),
+                                  # ('/KindDelete', KindDelete),
+                                  # ('/KindMove', KindMove),
+                                  # ('/KindPluginMove', KindPluginMove),
+                                  # ('/KindPluginDelete', KindPluginDelete),
 
 
                                   #以js的形式提供接口
-                                  ('/getPluginNameByGamecode', GetPluginNameByGamecode),
+                                  # ('/getPluginNameByGamecode', GetPluginNameByGamecode),
 
                               ], debug=True)

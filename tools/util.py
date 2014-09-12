@@ -4,7 +4,6 @@ import string
 from jinja2 import filters
 from jinja2.filters import environmentfilter
 
-from mogu.models.model import User
 from setting import IsPassword
 
 __author__ = 'wangjian2254'
@@ -261,18 +260,18 @@ def getPageing(index,page=0):
         return ("/",s%(page+1)) if page==1 else (s %(page-1),s%(page+1))
     return ("/",None) if page==1 else (s %(page-1),None)
 
-def checkUser(self):#验证是否具有这个用户
-    if not IsPassword:
-        return True
-    username=self.request.get('UserName')
-    password=self.request.get('UserPwd')
-    if not username or not password:
-        return False
-#    greetings = db.GqlQuery("SELECT * FROM User where userName=:1 and passWord=:2",UserName,UserPwd)
-    if 1== User.all().filter('userName =',username).filter('passWord =',password).count():
-        return True
-    else:
-        return False
+# def checkUser(self):#验证是否具有这个用户
+#     if not IsPassword:
+#         return True
+#     username=self.request.get('UserName')
+#     password=self.request.get('UserPwd')
+#     if not username or not password:
+#         return False
+# #    greetings = db.GqlQuery("SELECT * FROM User where userName=:1 and passWord=:2",UserName,UserPwd)
+#     if 1== User.all().filter('userName =',username).filter('passWord =',password).count():
+#         return True
+#     else:
+#         return False
 
 
 def getResult(result,success=True,message=u''):

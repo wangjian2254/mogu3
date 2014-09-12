@@ -5,6 +5,10 @@ api_version: 1
 threadsafe: yes
 
 handlers:
+- url: /
+  static_files: swf/Mogu.html
+  upload: swf/Mogu.html
+
 - url: /js
   static_dir: js
 
@@ -17,8 +21,13 @@ handlers:
   static_files: static/robots.txt
   upload: static/robots.txt
 
-- url: /static
-  static_dir: static
+- url: /swf
+  static_dir: swf
+  expiration : "1d"
+  secure: optional
+
+- url: /assets
+  static_dir: swf/assets
   expiration : "1d"
   secure: optional
 

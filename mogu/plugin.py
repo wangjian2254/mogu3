@@ -10,7 +10,7 @@ from google.appengine.ext.blobstore import blobstore, BlobInfo
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.kind import getKindSort
 from mogu.login import login_required, get_current_user
-from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind, Users, PluginDownloadNum
+from mogu.models.model import Plugin, PluginVersion, Images, WebSiteUrl, Kind, Users
 from setting import RankUri
 from tools.page import Page
 from tools.util import getResult
