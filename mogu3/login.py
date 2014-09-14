@@ -102,7 +102,7 @@ class RegUser(Page):
     def post(self, *args):
         username = self.request.get('username')
         password = self.request.get('password')
-        password2 = self.request.get('password2')
+        password2 = self.request.get('opassword')
 
         if password != password2:
             self.getResult(False, u'密码和确认密码不一致', None)
@@ -120,8 +120,8 @@ class RegUser(Page):
             u.auth = 'user'
             u.put()
             setLogin(self, u)
-            self.getResult(True, u'注册成功,请完成邮箱验证后登陆。',
-                           {'username': u.username, 'truename': u.username, 'id': u.username}, dialog=2)
+            self.getResult(True, u'注册成功.',
+                           {'username': u.username, 'truename': u.username, 'id': u.username})
 
 
 class Logout(Page):
