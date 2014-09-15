@@ -60,6 +60,11 @@ class Kind(db.Model):
     type = db.StringProperty()  #用户可选 1:用户可选
     # applist = db.ListProperty(item_type=int, indexed=False)
 
+    def put(self, **kwargs):
+        super(Kind, self).put(**kwargs)
+
+        memcache.delete('allkind')
+
 class PluginCount(db.Model):
     num = db.IntegerProperty(indexed=False, default=0)
 
@@ -71,17 +76,21 @@ class Plugin(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)  #//创建时间
     lastUpdateTime = db.DateTimeProperty(auto_now=True)  #//最后一次修改时间
     isdel = db.BooleanProperty(default=False)
-    imageid = db.IntegerProperty(indexed=False)
-    isactive = db.BooleanProperty(default=False)
+    imageid = db.StringProperty(indexed=False)
 
+    apkkey = db.StringProperty(indexed=False)
+    apkverson = db.IntegerProperty(indexed=False, default=0)
+
+    isactive = db.BooleanProperty(default=False)
+    status = db.StringProperty(indexed=False)
     username = db.StringProperty()  #隶属用户
     kindids = db.ListProperty(item_type=int)  #应用分类
     type = db.StringProperty()  #应用 类型 0：单机 1:积分 2：多人
     index_time = db.DateTimeProperty()  #//排序时间，默认等于apk最新提交时间
-    downnum = db.IntegerProperty()  #插件下载次数
+    downnum = db.IntegerProperty(default=0)  #插件下载次数
 
     def put(self, **kwargs):
-        if not self.key() or not self.key().id():
+        if not self.is_saved:
             flag = True
         else:
             flag = False
@@ -89,6 +98,7 @@ class Plugin(db.Model):
             pass
         else:
             self.isactive = False
+            self.status = u'名称、code、应用包名、简介、图标 不能为空'
         super(Plugin, self).put(**kwargs)
         pluginCount = PluginCount.get_or_insert('plugin_count')
         if flag:

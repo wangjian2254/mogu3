@@ -28,7 +28,8 @@ from mogu.picture import ImageDownload
 # from mogu.uploadscript import PluginUploadScript, PluginUploadApkScript, PluginUploadApkDataScript
 # from mogu.user import UserLogin, UserRegister
 # from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
-from mogu3.views import Menu, CurrentUser, PluginList
+from mogu3.views import Menu, CurrentUser, PluginList, PluginUpdate, UploadHandler, IconUploadHandler
+from mogu3.views_kind import KindList, KindUpdate, KindMove, KindAddPlugin, KindDelPlugin, KindDel
 
 
 app = webapp2.WSGIApplication([
@@ -43,7 +44,7 @@ app = webapp2.WSGIApplication([
 
                                   # 插件管理 接口
                                   ('/PluginList', PluginList),
-                                  # ('/PluginUpdate', PluginUpdate),
+                                  ('/PluginUpdate', PluginUpdate),
                                   # ('/PluginUpload', PluginUpload),
                                   # ('/PluginUpload2', PluginUpload2),
                                   # ('/PluginImageDel', PluginImageDel),
@@ -52,7 +53,8 @@ app = webapp2.WSGIApplication([
                                   # ('/PluginDetail', PluginDetail),
                                   #
                                   #
-                                  # ('/upload', UploadHandler),
+                                  ('/iconupload', IconUploadHandler),
+                                  ('/upload', UploadHandler),
                                   # ('/PluginUploadScript', PluginUploadScript),
                                   # ('/PluginUploadApkScript', PluginUploadApkScript),
                                   # ('/PluginUploadApkDataScript', PluginUploadApkDataScript),
@@ -82,16 +84,16 @@ app = webapp2.WSGIApplication([
                                   # ('/WebsiteUpdate', WebsiteUpdate),
                                   # ('/WebsiteDelete', WebsiteDelete),
                                   #
-                                  # ('/KindList', KindList),
+                                  ('/KindList', KindList),
                                   # ('/FenKindList', FenKindList),
                                   # ('/FenKindPlugin', FenKindPlugin),
                                   #
-                                  # ('/KindUpdate', KindUpdate),
-                                  # ('/KindAddPlugin', KindAddPlugin),
-                                  # ('/KindDelete', KindDelete),
-                                  # ('/KindMove', KindMove),
+                                  ('/KindUpdate', KindUpdate),
+                                  ('/KindAddPlugin', KindAddPlugin),
+                                  ('/KindDelete', KindDel),
+                                  ('/KindMove', KindMove),
                                   # ('/KindPluginMove', KindPluginMove),
-                                  # ('/KindPluginDelete', KindPluginDelete),
+                                  ('/KindPluginDelete', KindDelPlugin),
 
 
                                   #以js的形式提供接口

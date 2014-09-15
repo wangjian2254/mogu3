@@ -14,7 +14,7 @@ __author__ = u'王健'
 class ImageDownload(Page):
     def get(self):
         imgid=self.request.get("image_id")
-        if not imgid:
+        if not imgid or imgid == 'null':
             self.error(500)
             return
         img=memcache.get('image_id'+str(imgid))

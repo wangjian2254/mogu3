@@ -23,7 +23,19 @@ def login_required(fn):
         else:
             # web.redirect('/paper/234.html','post')
             web.getResult(False, u'请先登录', None, 404)
+    return auth
 
+
+def login_required_admin(fn):
+    @login_required
+    def auth(*arg):
+        web = arg[0]
+        user = get_current_user(web)
+        if user.get('auth') == 'admin':
+            fn(*arg)
+        else:
+            # web.redirect('/paper/234.html','post')
+            web.getResult(False, u'权限不足', None, 404)
     return auth
 
 
