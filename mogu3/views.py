@@ -94,7 +94,7 @@ class PluginList(Page):
             p = {'id': plugin.key().id(), 'name': plugin.name, 'appcode': plugin.appcode, 'code': plugin.code,
                  'imageid': plugin.imageid, 'date': plugin.date.strftime('%Y-%m-%d %H:%M'), 'type': plugin.type,
                  'lastUpdateTime': plugin.lastUpdateTime.strftime('%Y-%m-%d %H:%M'), 'username': plugin.username,
-                 'apkkey': plugin.apkkey, 'apkverson': plugin.apkverson, 'desc': plugin.desc,
+                 'apkkey': plugin.apkkey, 'apkverson': plugin.apkverson, 'desc': plugin.desc, 'imagelist': plugin.imagelist,
                  'isactive': plugin.isactive, 'status': plugin.status, 'kindids': plugin.kindids}
             l.append(p)
         self.getResult(True, u'获取应用列表', {'list': l, 'count': count}, cachename=cachename)
@@ -106,8 +106,6 @@ class PluginUpdate(Page):
         user = get_current_user(self)
         appcode = self.request.get('appcode')
         pluginid = self.request.get('pluginid')
-        upload_url = None
-        upload_icon_url = None
 
         if not pluginid:
             count = Plugin.all().filter("appcode =", appcode).count()
@@ -135,6 +133,15 @@ class PluginUpdate(Page):
         self.getResult(True, u'获取应用列表', {"pluginid":plugin.key().id(), 'upload_url': upload_url, 'upload_icon_url': upload_icon_url})
 
 
+
+class PluginImageUpdate(Page):
+    @login_required
+    def get(self, *args):
+        pluginid = self.request.get('pluginid')
+        upload_icon_url = blobstore.create_upload_url('/iconupload?pluginid=%s' % pluginid)
+        self.getResult(True, u'', upload_icon_url)
+
+
 class IconUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
@@ -152,6 +159,21 @@ class IconUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         self.response.out.write(json.dumps({'success': True, 'message': u'上传图标成功', 'status_code': 200, 'dialog':1}))
 
 
+class ImageUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
+    def post(self):
+        upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
+        if not upload_files:
+            self.response.out.write(json.dumps({'success': False, 'message': u'上传应用图片失败', 'status_code': 200, 'dialog':1}))
+            return
+        blob_info = upload_files[0]
+        pluginid = self.request.get('pluginid')
+        plugin = Plugin.get_by_id(int(pluginid))
+
+        plugin.imagelist.append(str(blob_info.key()))
+        plugin.put()
+        self.response.out.write(json.dumps({'success': True, 'message': u'上传应用图片成功', 'status_code': 200, 'dialog':1}))
+
+
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
@@ -167,5 +189,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                 b.delete()
         plugin.apkkey = str(blob_info.key())
         plugin.apkverson += 1
+        plugin.type_status = 2
         plugin.put()
         self.response.out.write(json.dumps({'success': True, 'message': u'上传APK成功', 'status_code': 200, 'dialog':1}))

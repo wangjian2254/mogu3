@@ -76,6 +76,8 @@ class Plugin(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)  #//创建时间
     lastUpdateTime = db.DateTimeProperty(auto_now=True)  #//最后一次修改时间
     isdel = db.BooleanProperty(default=False)
+    imagelist = db.StringListProperty(indexed=False)
+
     imageid = db.StringProperty(indexed=False)
 
     apkkey = db.StringProperty(indexed=False)
@@ -86,6 +88,7 @@ class Plugin(db.Model):
     username = db.StringProperty()  #隶属用户
     kindids = db.ListProperty(item_type=int)  #应用分类
     type = db.StringProperty()  #应用 类型 0：单机 1:积分 2：多人
+    type_status = db.IntegerProperty(indexed=False, default=1)
     index_time = db.DateTimeProperty()  #//排序时间，默认等于apk最新提交时间
     downnum = db.IntegerProperty(default=0)  #插件下载次数
 
@@ -95,7 +98,11 @@ class Plugin(db.Model):
         else:
             flag = False
         if self.name and self.code and self.appcode and self.desc and self.imageid and self.apkkey:
-            self.isactive = True
+            if self.type == '0' and self.type_status != 0:
+                self.isactive = False
+                self.status = u'等待签名'
+            else:
+                self.isactive = True
         else:
             self.isactive = False
             self.status = u'名称、code、应用包名、简介、图标 不能为空'
