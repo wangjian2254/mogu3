@@ -94,8 +94,8 @@ class Plugin(db.Model):
             flag = True
         else:
             flag = False
-        if self.name and self.code and self.appcode and self.desc and self.imageid:
-            pass
+        if self.name and self.code and self.appcode and self.desc and self.imageid and self.apkkey:
+            self.isactive = True
         else:
             self.isactive = False
             self.status = u'名称、code、应用包名、简介、图标 不能为空'
