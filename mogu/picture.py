@@ -9,7 +9,6 @@ from google.appengine.api import memcache
 from google.appengine.ext.blobstore import blobstore, BlobInfo
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.models.model import Images, Plugin
-from tools.page import Page
 
 __author__ = u'王健'
 

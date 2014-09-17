@@ -47,6 +47,11 @@ indexes:
   - name: date
     direction: desc
 
+- kind: Plugin
+  properties:
+  - name: kindids
+  - name: index_time
+
 - kind: PluginVersion
   properties:
   - name: plugin

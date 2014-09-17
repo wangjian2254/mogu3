@@ -27,7 +27,9 @@ class Menu(Page):
                     </menu>
                     <menu label='网址管理' mod='uri' >
                     </menu>
-                    <menu  label='分类管理' mod='kind'>
+                    <menu  label='分类'>
+                        <menuitem label='分类管理' mod='kind'></menuitem>
+                        <menuitem label='应用排序' mod='appkind'></menuitem>
                     </menu>
                     <menu label='积分管理'>
                         <menuitem label='游戏列表' mod='gamelist'></menuitem>
@@ -60,7 +62,7 @@ class CurrentUser(Page):
     @login_required
     def get(self, *args):
         u = get_current_user(self)
-        self.getResult(True, u'注册成功,请完成邮箱验证后登陆。',
+        self.getResult(True, u'',
                        {'username': u.get('username'), 'name': u.get('username'), 'uid': u.get('username'),
                         'auth': u.get('auth')})
 
@@ -83,19 +85,29 @@ class PluginList(Page):
     def get(self, *args):
         user = get_current_user(self)
         l = []
+        count = 0
         query = []
         if user.get('auth') == 'admin':
             page = int(self.request.get('page', '0'))
-            cachename = 'applist_%s' % (page)
+            kind = self.request.get('kind', '')
+            cachename = 'applist_%s_%s' % (kind, page)
             cacheresult = memcache.get(cachename)
             if cacheresult:
                 self.flush(cacheresult)
                 return
-            if not page:
-                query = Plugin.all().order('__key__').fetch(30)
+
+            if kind:
+                query = Plugin.all().order('index_time')
+                query = query.filter('kindids =', int(kind))
             else:
-                query = Plugin.all().order('__key__').fetch(30, 30 * page)
+                query = Plugin.all().order('__key__')
+            if not page:
+                query = query.fetch(30)
+            else:
+                query = query.fetch(30, 30 * page)
             pluginCount = PluginCount.get_or_insert('plugin_count')
+            # pluginCount.num = Plugin.all().count()
+            # pluginCount.put()
             count = pluginCount.num
         if user.get('auth') == 'user':
             cachename = 'user_applist_%s' % (user.get('username'))
@@ -179,6 +191,52 @@ class PluginDelete(Page):
             self.getResult(True, u'删除成功。', None)
         else:
             self.getResult(False, u'删除失败，权限不足。', None)
+
+
+
+class PluginAddKind(Page):
+    @login_required_admin
+    def get(self, *args):
+        pluginid = self.request.get('pluginid')
+        kindid = self.request.get('kindid')
+        plugin = Plugin.get_by_id(int(pluginid))
+        if int(kindid) not in plugin.kindids:
+            plugin.kindids.append(int(kindid))
+            plugin.put()
+            self.getResult(True, u'加入分类成功。', None)
+        else:
+            self.getResult(False, u'应用已经在分类内了。', None)
+
+
+class PluginOutKind(Page):
+    @login_required_admin
+    def get(self, *args):
+        pluginid = self.request.get('pluginid')
+        kindid = self.request.get('kindid')
+        plugin = Plugin.get_by_id(int(pluginid))
+        if int(kindid) in plugin.kindids:
+            plugin.kindids.remove(int(kindid))
+            plugin.put()
+            self.getResult(True, u'应用移出成功。', None)
+        else:
+            self.getResult(False, u'应用已经不在分类内了。', None)
+
+
+class PluginTop(Page):
+    @login_required_admin
+    def get(self, *args):
+        pluginid = self.request.get('pluginid')
+        kindid = self.request.get('kindid')
+        plugin = Plugin.get_by_id(int(pluginid))
+        query = Plugin.all().filter('kindids =', int(kindid)).order('index_time').fetch(1)
+        for p in query:
+            if p.key().id() != plugin.key().id():
+                import datetime as dt
+                plugin.index_time = p.index_time - dt.timedelta(minutes=1)
+                plugin.put()
+                self.getResult(True, u'置顶成功。', None)
+            else:
+                self.getResult(False, u'置顶失败。', None)
 
 
 class PluginImageUpdate(Page):

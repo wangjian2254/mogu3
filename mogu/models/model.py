@@ -124,7 +124,7 @@ class Plugin(db.Model):
             del kwargs['download']
             super(Plugin, self).put(**kwargs)
             return
-        if not self.is_saved:
+        if not self.is_saved():
             flag = True
         else:
             flag = False
@@ -148,8 +148,8 @@ class Plugin(db.Model):
         memcache.delete('user_applist_%s' % (self.username))
         l = []
         for i in range(0, pluginCount.num % 30):
-            l.append('applist_%s' % i)
-        l.append('applist_%s' % len(l))
+            l.append('applist__%s' % i)
+        l.append('applist__%s' % len(l))
         memcache.delete_multi(l)
 
 
