@@ -3,12 +3,14 @@
 # Email:wangjian2254@gmail.com
 from datetime import datetime
 import json
+import urllib
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.models.model import Plugin, PluginCount, Users
 from mogu3.login import login_required, get_current_user
 from tools.page import Page
 from google.appengine.ext.blobstore import blobstore, BlobInfo
+
 __author__ = u'王健'
 
 
@@ -94,11 +96,29 @@ class PluginList(Page):
             p = {'id': plugin.key().id(), 'name': plugin.name, 'appcode': plugin.appcode, 'code': plugin.code,
                  'imageid': plugin.imageid, 'date': plugin.date.strftime('%Y-%m-%d %H:%M'), 'type': plugin.type,
                  'lastUpdateTime': plugin.lastUpdateTime.strftime('%Y-%m-%d %H:%M'), 'username': plugin.username,
-                 'apkkey': plugin.apkkey, 'apkverson': plugin.apkverson, 'desc': plugin.desc, 'imagelist': plugin.imagelist,
+                 'apkkey': plugin.apkkey, 'apkverson': plugin.apkverson, 'desc': plugin.desc,
+                 'imagelist': plugin.imagelist, 'updatedesc': plugin.updatedesc,
                  'isactive': plugin.isactive, 'status': plugin.status, 'kindids': plugin.kindids}
             l.append(p)
         self.getResult(True, u'获取应用列表', {'list': l, 'count': count}, cachename=cachename)
 
+
+class PluginApkUpdate(Page):
+    @login_required
+    def post(self, *args):
+        pluginid = self.request.get('pluginid')
+        updatedesc = self.request.get('updatedesc')
+
+        if not pluginid:
+            self.getResult(False, u'请选择应用。', None)
+            return
+        else:
+            plugin = Plugin.get_by_id(int(pluginid))
+        plugin.updatedesc = updatedesc
+        plugin.put()
+        upload_url = blobstore.create_upload_url('/upload?pluginid=%s' % (plugin.key().id()))
+        self.getResult(True, u'保存应用成功',
+                       {"pluginid": plugin.key().id(), 'upload_url': upload_url})
 
 class PluginUpdate(Page):
     @login_required
@@ -116,10 +136,11 @@ class PluginUpdate(Page):
             plugin.username = user.get('username')
             plugin.kindids.append(int(self.request.get('kind')))
             plugin.index_time = datetime.now()
-
-
         else:
             plugin = Plugin.get_by_id(int(pluginid))
+            if user.get("auth") != 'admin' and user.get('username') != plugin.username:
+                self.getResult(False, u'删除失败，权限不足。', None)
+                return
             plugin.kindids[0] = int(self.request.get('kind'))
 
         plugin.name = self.request.get('name', '')
@@ -130,55 +151,94 @@ class PluginUpdate(Page):
         plugin.put()
         upload_url = blobstore.create_upload_url('/upload?pluginid=%s' % (plugin.key().id()))
         upload_icon_url = blobstore.create_upload_url('/iconupload?pluginid=%s' % (plugin.key().id()))
-        self.getResult(True, u'获取应用列表', {"pluginid":plugin.key().id(), 'upload_url': upload_url, 'upload_icon_url': upload_icon_url})
+        self.getResult(True, u'保存应用成功',
+                       {"pluginid": plugin.key().id(), 'upload_url': upload_url, 'upload_icon_url': upload_icon_url})
 
+
+class PluginDelete(Page):
+    @login_required
+    def get(self, *args):
+        user = get_current_user(self)
+        pluginid = self.request.get('pluginid')
+        plugin = Plugin.get_by_id(int(pluginid))
+        if user.get("auth") == 'admin' or user.get('username') == plugin.username:
+            plugin.delete()
+            self.getResult(True, u'删除成功。', None)
+        else:
+            self.getResult(False, u'删除失败，权限不足。', None)
 
 
 class PluginImageUpdate(Page):
     @login_required
     def get(self, *args):
         pluginid = self.request.get('pluginid')
-        upload_icon_url = blobstore.create_upload_url('/iconupload?pluginid=%s' % pluginid)
+        upload_icon_url = blobstore.create_upload_url('/imageupload?pluginid=%s' % pluginid)
         self.getResult(True, u'', upload_icon_url)
+
 
 
 class IconUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
         if not upload_files:
-            self.response.out.write(json.dumps({'success': False, 'message': u'上传图标失败', 'status_code': 200, 'dialog':1}))
+            self.response.out.write(
+                json.dumps({'success': False, 'message': u'上传图标失败', 'status_code': 200, 'dialog': 1}))
             return
         blob_info = upload_files[0]
         pluginid = self.request.get('pluginid')
         plugin = Plugin.get_by_id(int(pluginid))
         if plugin.imageid:
-            b = BlobInfo.get(plugin.imageid)
-            b.delete()
-        plugin.imageid = str(blob_info.key())
+            b = BlobInfo.get(plugin.imageid.split('.')[0])
+            if b:
+                b.delete()
+        plugin.imageid = '%s.%s' % (str(blob_info.key()), blob_info.filename.split('.')[-1])
         plugin.put()
-        self.response.out.write(json.dumps({'success': True, 'message': u'上传图标成功', 'status_code': 200, 'dialog':1}))
+        self.response.out.write(json.dumps({'success': True, 'message': u'上传图标成功', 'status_code': 200, 'dialog': 1}))
 
 
 class ImageUploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
         if not upload_files:
-            self.response.out.write(json.dumps({'success': False, 'message': u'上传应用图片失败', 'status_code': 200, 'dialog':1}))
+            self.response.out.write(
+                json.dumps({'success': False, 'message': u'上传应用图片失败', 'status_code': 200, 'dialog': 1}))
             return
         blob_info = upload_files[0]
         pluginid = self.request.get('pluginid')
         plugin = Plugin.get_by_id(int(pluginid))
-
-        plugin.imagelist.append(str(blob_info.key()))
+        plugin.imagelist.append('%s.%s' % (str(blob_info.key()), blob_info.filename.split('.')[-1]))
         plugin.put()
-        self.response.out.write(json.dumps({'success': True, 'message': u'上传应用图片成功', 'status_code': 200, 'dialog':1}))
+        self.response.out.write(json.dumps(
+            {'success': True, 'result': '%s.%s' % (str(blob_info.key()), blob_info.filename.split('.')[-1]),
+             'message': u'上传应用图片成功', 'status_code': 200, 'dialog': 1}))
 
+
+class DeleteAppImage(Page):
+    @login_required
+    def post(self):
+        imgid=self.request.get("imagekey", '')
+        filename = str(urllib.unquote(imgid))
+        pluginid = self.request.get('pluginid')
+        plugin = Plugin.get_by_id(int(pluginid))
+        imgid = imgid.split('.')[0]
+
+
+        if filename in plugin.imagelist:
+            plugin.imagelist.remove(filename)
+            plugin.put()
+            img = BlobInfo.get(imgid)
+            if img:
+                img.delete()
+            self.getResult(True, u'图片删除成功', None)
+            return
+        self.getResult(False, u'图片删除失败', None)
 
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
     def post(self):
         upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
         if not upload_files:
-            self.response.out.write(json.dumps({'success': False, 'message': u'上传APK失败', 'status_code': 200, 'dialog':1}))
+            self.response.out.write(
+                json.dumps({'success': False, 'message': u'上传APK失败', 'status_code': 200, 'dialog': 1}))
             return
         blob_info = upload_files[0]
         pluginid = self.request.get('pluginid')
@@ -191,4 +251,4 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
         plugin.apkverson += 1
         plugin.type_status = 2
         plugin.put()
-        self.response.out.write(json.dumps({'success': True, 'message': u'上传APK成功', 'status_code': 200, 'dialog':1}))
+        self.response.out.write(json.dumps({'success': True, 'message': u'上传APK成功', 'status_code': 200, 'dialog': 1}))

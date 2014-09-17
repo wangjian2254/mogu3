@@ -1,10 +1,11 @@
 # coding=utf-8
-#author:u'王健'
+# author:u'王健'
 #Date: 13-6-1
 #Time: 下午9:21
 import json
 import os
 from google.appengine.api import memcache
+from google.appengine.ext.blobstore import BlobInfo
 
 __author__ = u'王健'
 
@@ -42,13 +43,11 @@ class WebSiteUrl(db.Model):
         memcache.set('usedurl', self.url, 3600 * 24 * 10)
 
 
-
 class Users(db.Model):
     name = db.StringProperty()  #本站昵称
     username = db.EmailProperty()
     password = db.StringProperty()
     auth = db.StringProperty()
-
 
 
 class KindSort(db.Model):
@@ -65,22 +64,24 @@ class Kind(db.Model):
 
         memcache.delete('allkind')
 
+
 class PluginCount(db.Model):
     num = db.IntegerProperty(indexed=False, default=0)
+
 
 class Plugin(db.Model):
     name = db.StringProperty()
     code = db.StringProperty()
     appcode = db.StringProperty()
-    desc = db.TextProperty()
+    desc = db.TextProperty(indexed=False)
+    updatedesc = db.TextProperty(indexed=False)
     date = db.DateTimeProperty(auto_now_add=True)  #//创建时间
     lastUpdateTime = db.DateTimeProperty(auto_now=True)  #//最后一次修改时间
-    isdel = db.BooleanProperty(default=False)
     imagelist = db.StringListProperty(indexed=False)
 
     imageid = db.StringProperty(indexed=False)
 
-    apkkey = db.StringProperty(indexed=False)
+    apkkey = db.StringProperty()
     apkverson = db.IntegerProperty(indexed=False, default=0)
 
     isactive = db.BooleanProperty(default=False)
@@ -92,7 +93,36 @@ class Plugin(db.Model):
     index_time = db.DateTimeProperty()  #//排序时间，默认等于apk最新提交时间
     downnum = db.IntegerProperty(default=0)  #插件下载次数
 
+    def delete(self, **kwargs):
+        if self.imageid:
+            b = BlobInfo.get(self.imageid.split('.')[0])
+            if b:
+                b.delete()
+        if self.apkkey:
+            b = BlobInfo.get(self.apkkey)
+            if b:
+                b.delete()
+        for imguri in self.imagelist:
+            b = BlobInfo.get(imguri.split('.')[0])
+            if b:
+                b.delete()
+        super(Plugin, self).delete(**kwargs)
+        pluginCount = PluginCount.get_or_insert('plugin_count')
+        pluginCount.num -= 1
+        pluginCount.put()
+        memcache.delete('pluginid%s' % self.key().id())
+        memcache.delete('user_applist_%s' % (self.username))
+        l = []
+        for i in range(0, pluginCount.num % 30):
+            l.append('applist_%s' % i)
+        l.append('applist_%s' % len(l))
+        memcache.delete_multi(l)
+
     def put(self, **kwargs):
+        if kwargs.has_key("download"):
+            del kwargs['download']
+            super(Plugin, self).put(**kwargs)
+            return
         if not self.is_saved:
             flag = True
         else:
@@ -116,10 +146,9 @@ class Plugin(db.Model):
         memcache.delete('user_applist_%s' % (self.username))
         l = []
         for i in range(0, pluginCount.num % 30):
-            l.append('applist_%s'% i)
-        l.append('applist_%s'% len(l))
+            l.append('applist_%s' % i)
+        l.append('applist_%s' % len(l))
         memcache.delete_multi(l)
-
 
 
 # class PluginDownloadNum(db.Model):

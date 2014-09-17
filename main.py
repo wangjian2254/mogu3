@@ -20,7 +20,7 @@ import webapp2
 #     FenKindList, FenKindPlugin
 from mogu3.login import Login, RegUser, Logout
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
-from mogu.picture import ImageDownload
+from mogu.picture import ImageDownload, ServeHandler
 # from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, \
 #     PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, \
 #     ServeHandler, PluginUpload2, \
@@ -29,7 +29,7 @@ from mogu.picture import ImageDownload
 # from mogu.user import UserLogin, UserRegister
 # from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
 from mogu3.views import Menu, CurrentUser, PluginList, PluginUpdate, UploadHandler, IconUploadHandler, \
-    ImageUploadHandler, PluginImageUpdate
+    ImageUploadHandler, PluginImageUpdate, DeleteAppImage, PluginApkUpdate, PluginDelete
 from mogu3.views_kind import KindList, KindUpdate, KindMove, KindAddPlugin, KindDelPlugin, KindDel
 
 
@@ -45,6 +45,8 @@ app = webapp2.WSGIApplication([
 
                                   # 插件管理 接口
                                   ('/PluginList', PluginList),
+                                  ('/PluginApkUpdate', PluginApkUpdate),
+                                  ('/PluginDelete', PluginDelete),
                                   ('/PluginUpdate', PluginUpdate),
                                   ('/PluginImageUpdate', PluginImageUpdate),
                                   # ('/PluginUpload', PluginUpload),
@@ -55,14 +57,15 @@ app = webapp2.WSGIApplication([
                                   # ('/PluginDetail', PluginDetail),
                                   #
                                   #
+                                  ('/DeleteAppImage', DeleteAppImage),
                                   ('/imageupload', ImageUploadHandler),
                                   ('/iconupload', IconUploadHandler),
                                   ('/upload', UploadHandler),
                                   # ('/PluginUploadScript', PluginUploadScript),
                                   # ('/PluginUploadApkScript', PluginUploadApkScript),
                                   # ('/PluginUploadApkDataScript', PluginUploadApkDataScript),
-                                  # ('/serve/([^/]+)?/([0-9]+)?/([0-9]+)?/$', ServeHandler),
-                                  # ('/serve/([^/]+)?', ServeHandler),
+                                  ('/serve/([^/]+)?/([0-9]+)?/([0-9]+)?/$', ServeHandler),
+                                  ('/serve/([^/]+)?', ServeHandler),
                                   #
                                   #
                                   # #插件 手机端接口
@@ -81,7 +84,8 @@ app = webapp2.WSGIApplication([
                                   ('/NoticeInfoUpdate', NoticeInfoUpdate),
 
                                   # 图片下载 手机接口
-                                  ('/download', ImageDownload),
+                                  # ('/download', ImageDownload),
+                                  ('/download/([^/]+)?', ImageDownload),
                                   # ('/ImageDel', ImageDel),
                                   # ('/WebsiteList', WebsiteList),
                                   # ('/WebsiteUpdate', WebsiteUpdate),
