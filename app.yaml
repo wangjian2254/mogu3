@@ -17,6 +17,10 @@ handlers:
 - url: /css
   static_dir: css
 
+- url: /crossdomain.xml
+  static_files: swf/crossdomain.xml
+  upload: static/crossdomain.xml
+
 - url: /robots.txt
   static_files: static/robots.txt
   upload: static/robots.txt

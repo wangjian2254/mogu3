@@ -7,7 +7,7 @@ import urllib
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.models.model import Plugin, PluginCount, Users
-from mogu3.login import login_required, get_current_user
+from mogu3.login import login_required, get_current_user, login_required_admin
 from tools.page import Page
 from google.appengine.ext.blobstore import blobstore, BlobInfo
 
@@ -64,6 +64,19 @@ class CurrentUser(Page):
                        {'username': u.get('username'), 'name': u.get('username'), 'uid': u.get('username'),
                         'auth': u.get('auth')})
 
+
+class PluginNameList(Page):
+    @login_required_admin
+    def get(self, *args):
+        cachename = 'appnamelist'
+        cacheresult = memcache.get(cachename)
+        if cacheresult:
+            self.flush(cacheresult)
+            return
+        l = []
+        for p in Plugin.all().filter('isactive =', True).order('__key__'):
+            l.append({'id': p.key().id(), 'name': p.name, 'icon': p.imageid})
+        self.getResult(True, u'', l, cachename=cachename)
 
 class PluginList(Page):
     @login_required

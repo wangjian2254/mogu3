@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cross-domain-policy>
+    <site-control permitted-cross-domain-policies="all" />
+    <allow-access-from domain="*.mmggoo.com" to-ports="80"  />
+    <allow-http-request-headers-from domain="*.mmggoo.com" headers="*"/>
+    <allow-access-from domain="*.appsp0t.com" to-ports="80"  />
+    <allow-http-request-headers-from domain="*.appsp0t.com" headers="*"/>
+    <allow-access-from domain="*.appspot.com" to-ports="80"  />
+    <allow-http-request-headers-from domain="*.appspot.com" headers="*"/>
+    <allow-access-from domain="127.0.0.1"  to-ports="8000-8900"  />
+    <allow-http-request-headers-from domain="127.0.0.1" headers="*"/>
+    <allow-access-from domain="localhost"  to-ports="8000-8900"  />
+    <allow-http-request-headers-from domain="localhost" headers="*"/>
+</cross-domain-policy>

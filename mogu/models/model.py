@@ -110,6 +110,7 @@ class Plugin(db.Model):
         pluginCount = PluginCount.get_or_insert('plugin_count')
         pluginCount.num -= 1
         pluginCount.put()
+        memcache.delete('appnamelist')
         memcache.delete('pluginid%s' % self.key().id())
         memcache.delete('user_applist_%s' % (self.username))
         l = []
@@ -142,6 +143,7 @@ class Plugin(db.Model):
             pluginCount.num += 1
             pluginCount.put()
 
+        memcache.delete('appnamelist')
         memcache.delete('pluginid%s' % self.key().id())
         memcache.delete('user_applist_%s' % (self.username))
         l = []
@@ -203,11 +205,15 @@ class Notice(db.Model):
     content = db.StringListProperty(indexed=False)
     type = db.IntegerProperty()
     plugin = db.IntegerProperty()
-    pluginimg = db.IntegerProperty()
+    pluginimg = db.StringProperty()
     lastUpdateTime = db.DateTimeProperty()  #//最后一次修改时间
     startdate = db.DateTimeProperty(auto_now_add=True)  #//开始时间
     enddate = db.DateTimeProperty()  #//提交时间
     isdel = db.BooleanProperty(default=False)
+
+    def put(self, **kwargs):
+        super(Notice, self).put(**kwargs)
+        memcache.delete('noticelist')
 
 
 

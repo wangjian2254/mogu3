@@ -18,8 +18,10 @@
 import webapp2
 # from mogu.kind import KindList, KindUpdate, KindDelete, KindAddPlugin, KindMove, KindPluginDelete, KindPluginMove, \
 #     FenKindList, FenKindPlugin
+from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
 from mogu3.login import Login, RegUser, Logout
-from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail
+from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail, DeleteContentNotice, \
+    NoticeUploadHandler, NoticeAppendImage, NoticeAppendContent
 from mogu.picture import ImageDownload, ServeHandler
 # from mogu.plugin import PluginList, PluginUpdate, PluginDelete, PluginDetail, PluginDownload, PluginInfoUpdate, \
 #     PluginInfoAll, PluginSearch, PluginUpload, PluginImageDel, PluginVersionDelete, ImageDel, UploadHandler, \
@@ -29,7 +31,7 @@ from mogu.picture import ImageDownload, ServeHandler
 # from mogu.user import UserLogin, UserRegister
 # from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
 from mogu3.views import Menu, CurrentUser, PluginList, PluginUpdate, UploadHandler, IconUploadHandler, \
-    ImageUploadHandler, PluginImageUpdate, DeleteAppImage, PluginApkUpdate, PluginDelete
+    ImageUploadHandler, PluginImageUpdate, DeleteAppImage, PluginApkUpdate, PluginDelete, PluginNameList
 from mogu3.views_kind import KindList, KindUpdate, KindMove, KindAddPlugin, KindDelPlugin, KindDel
 
 
@@ -44,6 +46,7 @@ app = webapp2.WSGIApplication([
                                   # ('/UserRegister', UserRegister),
 
                                   # 插件管理 接口
+                                  ('/PluginNameList', PluginNameList),
                                   ('/PluginList', PluginList),
                                   ('/PluginApkUpdate', PluginApkUpdate),
                                   ('/PluginDelete', PluginDelete),
@@ -58,6 +61,7 @@ app = webapp2.WSGIApplication([
                                   #
                                   #
                                   ('/DeleteAppImage', DeleteAppImage),
+                                  ('/noticeupload', NoticeUploadHandler),
                                   ('/imageupload', ImageUploadHandler),
                                   ('/iconupload', IconUploadHandler),
                                   ('/upload', UploadHandler),
@@ -77,6 +81,9 @@ app = webapp2.WSGIApplication([
                                   # 系统消息管理 接口
                                   ('/NoticeList', NoticeList),
                                   ('/NoticeUpdate', NoticeUpdate),
+                                  ('/DeleteContentNotice', DeleteContentNotice),
+                                  ('/NoticeAppendImage', NoticeAppendImage),
+                                  ('/NoticeAppendContent', NoticeAppendContent),
                                   ('/NoticeDelete', NoticeDelete),
                                   ('/NoticeDetail', NoticeDetail),
 
@@ -87,9 +94,9 @@ app = webapp2.WSGIApplication([
                                   # ('/download', ImageDownload),
                                   ('/download/([^/]+)?', ImageDownload),
                                   # ('/ImageDel', ImageDel),
-                                  # ('/WebsiteList', WebsiteList),
-                                  # ('/WebsiteUpdate', WebsiteUpdate),
-                                  # ('/WebsiteDelete', WebsiteDelete),
+                                  ('/WebsiteList', WebsiteList),
+                                  ('/WebsiteUpdate', WebsiteUpdate),
+                                  ('/WebsiteDelete', WebsiteDelete),
                                   #
                                   ('/KindList', KindList),
                                   # ('/FenKindList', FenKindList),
