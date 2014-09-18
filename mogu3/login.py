@@ -18,7 +18,7 @@ def login_required(fn):
     def auth(*arg):
         web = arg[0]
         user = get_current_user(web)
-        if user:
+        if user.get('username'):
             fn(*arg)
         else:
             # web.redirect('/paper/234.html','post')

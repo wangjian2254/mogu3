@@ -18,5 +18,11 @@ indexes:
 
 - kind: Plugin
   properties:
+  - name: isactive
+  - name: kindids
+  - name: index_time
+
+- kind: Plugin
+  properties:
   - name: kindids
   - name: index_time

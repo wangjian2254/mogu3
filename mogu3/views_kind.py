@@ -11,13 +11,15 @@ __author__ = u'王健'
 
 
 def getKindSort():
-    kindsort = KindSort.get_by_key_name("kindsort")
-    # kindsort.delete()
+    kindsort = memcache.get("kindsort")
     if not kindsort:
-        kindsort = KindSort(key_name='kindsort')
-        for k in Kind.all():
-            kindsort.kindlist.append(k.key().id())
-        kindsort.put()
+        kindsort = KindSort.get_by_key_name("kindsort")
+        if not kindsort:
+            kindsort = KindSort(key_name='kindsort')
+            for k in Kind.all():
+                kindsort.kindlist.append(k.key().id())
+            kindsort.put()
+        memcache.set("kindsort", kindsort, 3600 * 24)
     return kindsort
 
 

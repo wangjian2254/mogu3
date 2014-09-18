@@ -90,6 +90,7 @@ class PluginList(Page):
         l = []
         count = 0
         query = []
+        cachename = ''
         if user.get('auth') == 'admin':
             page = int(self.request.get('page', '0'))
             kind = self.request.get('kind', '')

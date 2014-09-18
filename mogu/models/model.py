@@ -63,6 +63,7 @@ class Kind(db.Model):
         super(Kind, self).put(**kwargs)
 
         memcache.delete('allkind')
+        memcache.delete('allkindlist')
 
 
 class PluginCount(db.Model):

@@ -33,6 +33,7 @@ from mogu.picture import ImageDownload, ServeHandler
 from mogu3.views import Menu, CurrentUser, PluginList, PluginUpdate, UploadHandler, IconUploadHandler, \
     ImageUploadHandler, PluginImageUpdate, DeleteAppImage, PluginApkUpdate, PluginDelete, PluginNameList, PluginOutKind, \
     PluginAddKind, PluginTop
+from mogu3.views_api import PluginInfoAll
 from mogu3.views_kind import KindList, KindUpdate, KindMove, KindAddPlugin, KindDelPlugin, KindDel
 
 
@@ -79,7 +80,7 @@ app = webapp2.WSGIApplication([
                                   # #插件 手机端接口
                                   # ('/PluginDownload', PluginDownload),
                                   # ('/PluginInfoUpdate', PluginInfoUpdate),
-                                  # ('/PluginInfoAll', PluginInfoAll),
+                                  ('/PluginInfoAll', PluginInfoAll),
                                   # ('/PluginSearch', PluginSearch),
 
                                   # 系统消息管理 接口

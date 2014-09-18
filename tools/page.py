@@ -48,5 +48,5 @@ class Page(webapp2.RequestHandler):
             map['result'] = result
         jsonstr = json.dumps(map)
         if cachename:
-            memcache.set(cachename, jsonstr, 3600 * 24 * 31)
+            memcache.set(cachename, jsonstr, 3600)
         self.response.out.write(jsonstr)
