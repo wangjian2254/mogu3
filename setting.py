@@ -19,5 +19,5 @@ AppPhoneVerson='1.1'
 AppPhoneUri='http://download.mmggoo.com'
 
 #积分网址
-# RankUri = 'http://gamerank.mmggoo.com'
-RankUri = 'http://127.0.0.1:8011'
+RankUri = 'http://gamerank.mmggoo.com'
+# RankUri = 'http://127.0.0.1:8011'
