@@ -20,19 +20,19 @@ class PluginUploadScript(Page):
         appcode = self.request.get('appcode', None)
         if 0 < Plugin.all().filter('appcode =', appcode).count():
             for plugin in Plugin.all().filter('appcode =', appcode):
-                for pv in PluginVersion.all().filter('plugin =',plugin.key().id()):
-                    for img in Images.get_by_id(pv.imageids):
-                        if img:
-                            img.delete()
-                    if pv.datakey:
-                        b=blobstore.BlobInfo.get(pv.datakey)
-                        if b:
-                            b.delete()
-                    pv.delete()
+
+                if plugin.apkkey:
+                    b = blobstore.BlobInfo.get(plugin.apkkey)
+                    if b:
+                        b.delete()
                 if plugin.imageid:
-                    img = Images.get_by_id(plugin.imageid)
-                    if img:
-                        img.delete()
+                    b = blobstore.BlobInfo.get(plugin.imageid)
+                    if b:
+                        b.delete()
+                for imgid in plugin.imagelist:
+                    b = blobstore.BlobInfo.get(imgid)
+                    if b:
+                        b.delete()
                 plugin.delete()
         desc = self.request.get('desc', None)
         if id:
@@ -44,53 +44,19 @@ class PluginUploadScript(Page):
         plugin.code = code
         plugin.appcode = appcode
         plugin.desc = desc
+        plugin.type = '0'
+        plugin.username = 'admin@gmail.com'
+        plugin.index_time = noteupdate
         plugin.lastUpdateTime = noteupdate
         if not id and 0 < Plugin.all().filter('appcode =', appcode).count():
             return self.flush({'status':500,'message':u'插件已经存在'})
-        imgfield = self.request.POST.get('icon')
-        if hasattr(imgfield,'type'):
-            if imgfield.type.lower()  in ['image/pjpeg', 'image/x-png','image/x-icon', 'image/jpeg', 'image/png', 'image/gif','image/jpg']:
 
-                imgfile = Images()
-                imgfile.filename = imgfield.filename
-                imgfile.filetype = imgfield.type
-                imgfile.data = db.Blob(imgfield.file.read())
-                imgfile.size = imgfield.bufsize
-                imgfile.put()
-                plugin.imageid=imgfile.key().id()
         plugin.put()
-
-        pluginid = plugin.key().id()
-
-        versioncode = self.request.get('versioncode', '')
-        versionnum = self.request.get('versionnum', '')
-        updateDesc = self.request.get('updateDesc', '……')
-
-        pluginVersion = PluginVersion()
-        pluginVersion.plugin = int(pluginid)
-        pluginVersion.versioncode = versioncode
-        pluginVersion.versionnum = int(versionnum)
-        pluginVersion.updateDesc = updateDesc
-
-
-        for i in range(1, 11):
-            imgfilename = 'image' + str(i)
-            imgfield = self.request.POST.get(imgfilename)
-            if imgfield != '' and imgfield != u'' and imgfield != None:
-                if imgfield.type.lower() not in ['image/pjpeg', 'image/x-png', 'image/jpeg', 'image/png', 'image/gif',
-                                                 'image/jpg']:
-                    continue
-                imgfile = Images()
-                imgfile.filename = imgfield.filename
-                imgfile.filetype = imgfield.type
-                imgfile.data = db.Blob(imgfield.file.read())
-                imgfile.size = imgfield.bufsize
-                imgfile.put()
-                pluginVersion.imageids.append(imgfile.key().id())
-        pluginVersion.put()
-
-        upload_url = blobstore.create_upload_url('/upload?pluginversionid=%s'%(pluginVersion.key().id()))
-        self.flush({'status' : 200, 'upload_url' : upload_url})
+        upload_icon_url = blobstore.create_upload_url('/iconupload?pluginid=%s' % (plugin.key().id()))
+        imgurllist = []
+        for i in range(10):
+            imgurllist.append(blobstore.create_upload_url('/imageupload?pluginid=%s' % (plugin.key().id())))
+        self.flush({'status': 200, 'upload_icon_url': upload_icon_url, 'upload_image_url': imgurllist})
 
 
 
