@@ -8,6 +8,7 @@ from google.appengine.api import memcache
 from google.appengine.ext.webapp import blobstore_handlers
 from mogu.models.model import Plugin, PluginCount, Users
 from mogu3.login import login_required, get_current_user, login_required_admin
+from setting import RankUri
 from tools.page import Page
 from google.appengine.ext.blobstore import blobstore, BlobInfo
 
@@ -31,9 +32,9 @@ class Menu(Page):
                         <menuitem label='分类管理' mod='kind'></menuitem>
                         <menuitem label='应用排序' mod='appkind'></menuitem>
                     </menu>
-                    <menu label='积分管理'>
-                        <menuitem label='游戏列表' mod='gamelist'></menuitem>
-                        <menuitem label='房间列表' mod='roomlist'></menuitem>
+                    <menu label='积分、房间管理'>
+                        <menuitem label='游戏积分' mod='gamelist'></menuitem>
+                        <menuitem label='游戏房间' mod='roomlist'></menuitem>
                     </menu>
                 </root>
         '''
@@ -46,12 +47,12 @@ class Menu(Page):
                 </root>
         '''
         user = get_current_user(self)
-        if user.get('username') == 'asa':
-            u = Users.all().filter('username =', 'asa').fetch(1)
-            if u:
-                u = u[0]
-                u.auth = 'admin'
-                u.put()
+        # if user.get('username') == 'asa':
+        #     u = Users.all().filter('username =', 'asa').fetch(1)
+        #     if u:
+        #         u = u[0]
+        #         u.auth = 'admin'
+        #         u.put()
         if user.get('auth') == 'admin':
             self.flush(menuxml)
         if user.get('auth') == 'user':
@@ -62,9 +63,11 @@ class CurrentUser(Page):
     @login_required
     def get(self, *args):
         u = get_current_user(self)
-        self.getResult(True, u'',
-                       {'username': u.get('username'), 'name': u.get('username'), 'uid': u.get('username'),
-                        'auth': u.get('auth')})
+        result = {'username': u.get('username'), 'name': u.get('username'), 'uid': u.get('username'),
+                        'auth': u.get('auth')}
+        if u.get('auth') == 'admin':
+            result['rankurl'] = RankUri
+        self.getResult(True, u'', result)
 
 
 class PluginNameList(Page):
@@ -117,12 +120,36 @@ class PluginList(Page):
                 return
             query = Plugin.all().filter('username =', user.get('username')).order('__key__')
             count = query.count()
+        self.plugin_dict(l, count, query, cachename)
+
+    @login_required_admin
+    def post(self):
+        pluginids = self.request.get('pluginids','')
+        import hashlib
+        cachename = hashlib.md5(pluginids).hexdigest().upper()
+        cacheresult = memcache.get(cachename)
+        if cacheresult:
+            self.flush(cacheresult)
+            return
+        pluginids = pluginids.split(',')
+        ids = []
+        for i in pluginids:
+            try:
+                ids.append(int(i))
+            except:
+                pass
+        query = Plugin.get_by_id(ids)
+        count = len(ids)
+        l = []
+        self.plugin_dict(l, count, query, cachename)
+
+    def plugin_dict(self, l,count, query, cachename):
         for plugin in query:
             p = {'id': plugin.key().id(), 'name': plugin.name, 'appcode': plugin.appcode, 'code': plugin.code,
                  'imageid': plugin.imageid, 'date': plugin.date.strftime('%Y-%m-%d %H:%M'), 'type': plugin.type,
                  'lastUpdateTime': plugin.lastUpdateTime.strftime('%Y-%m-%d %H:%M'), 'username': plugin.username,
                  'apkkey': plugin.apkkey, 'apkverson': plugin.apkverson, 'desc': plugin.desc,
-                 'imagelist': plugin.imagelist, 'updatedesc': plugin.updatedesc,
+                 'imagelist': plugin.imagelist, 'updatedesc': plugin.updatedesc, 'downnum': plugin.downnum,
                  'isactive': plugin.isactive, 'status': plugin.status, 'kindids': plugin.kindids}
             l.append(p)
         self.getResult(True, u'获取应用列表', {'list': l, 'count': count}, cachename=cachename)
