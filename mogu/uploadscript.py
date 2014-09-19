@@ -14,30 +14,29 @@ timezone = datetime.timedelta(hours=8)
 class PluginUploadScript(Page):
     def post(self):
         noteupdate = datetime.datetime.utcnow() + timezone
-        id = self.request.get('id', None)
+        # id = self.request.get('id', None)
         name = self.request.get('name', None)
         code = self.request.get('code', None)
         appcode = self.request.get('appcode', None)
+        plugin = None
         if 0 < Plugin.all().filter('appcode =', appcode).count():
-            for plugin in Plugin.all().filter('appcode =', appcode):
+            for p in Plugin.all().filter('appcode =', appcode):
 
-                if plugin.apkkey:
-                    b = blobstore.BlobInfo.get(plugin.apkkey)
-                    if b:
-                        b.delete()
-                if plugin.imageid:
-                    b = blobstore.BlobInfo.get(plugin.imageid)
-                    if b:
-                        b.delete()
-                for imgid in plugin.imagelist:
+                # if plugin.apkkey:
+                #     b = blobstore.BlobInfo.get(plugin.apkkey)
+                #     if b:
+                #         b.delete()
+                # if p.imageid:
+                #     b = blobstore.BlobInfo.get(p.imageid)
+                #     if b:
+                #         b.delete()
+                for imgid in p.imagelist:
                     b = blobstore.BlobInfo.get(imgid)
                     if b:
                         b.delete()
-                plugin.delete()
+                plugin = p
         desc = self.request.get('desc', None)
-        if id:
-            plugin = Plugin.get_by_id(int(id))
-        else:
+        if not plugin:
             plugin = Plugin()
 
         plugin.name = name
@@ -52,11 +51,15 @@ class PluginUploadScript(Page):
             return self.flush({'status':500,'message':u'插件已经存在'})
 
         plugin.put()
-        upload_icon_url = blobstore.create_upload_url('/iconupload?pluginid=%s' % (plugin.key().id()))
         imgurllist = []
         for i in range(10):
             imgurllist.append(blobstore.create_upload_url('/imageupload?pluginid=%s' % (plugin.key().id())))
-        self.flush({'status': 200, 'upload_icon_url': upload_icon_url, 'upload_image_url': imgurllist})
+        result = {'status': 200, 'upload_image_url': imgurllist}
+        if not plugin.apkkey:
+            result['upload_url'] = blobstore.create_upload_url('/upload?pluginid=%s' % (plugin.key().id()))
+        if not plugin.imageid:
+            result['upload_icon_url'] = blobstore.create_upload_url('/iconupload?pluginid=%s' % (plugin.key().id()))
+        self.flush(result)
 
 
 

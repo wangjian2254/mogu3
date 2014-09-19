@@ -90,7 +90,7 @@ class Plugin(db.Model):
     username = db.StringProperty()  #隶属用户
     kindids = db.ListProperty(item_type=int)  #应用分类
     type = db.StringProperty()  #应用 类型 0：单机 1:积分 2：多人
-    type_status = db.IntegerProperty(indexed=False, default=1)
+    type_status = db.IntegerProperty(indexed=False, default=1) #0：完成，1：刚上传 2：破解完成 3：图标、appcode未解析
     index_time = db.DateTimeProperty()  #//排序时间，默认等于apk最新提交时间
     downnum = db.IntegerProperty(default=0)  #插件下载次数
 
@@ -116,8 +116,8 @@ class Plugin(db.Model):
         memcache.delete('user_applist_%s' % (self.username))
         l = []
         for i in range(0, pluginCount.num % 30):
-            l.append('applist_%s' % i)
-        l.append('applist_%s' % len(l))
+            l.append('applist__%s' % i)
+        l.append('applist__%s' % len(l))
         memcache.delete_multi(l)
 
     def put(self, **kwargs):
@@ -129,15 +129,32 @@ class Plugin(db.Model):
             flag = True
         else:
             flag = False
-        if self.name and self.code and self.appcode and self.desc and self.imageid and self.apkkey:
-            if self.type == '0' and self.type_status != 0:
+        if self.name and self.desc and self.apkkey:
+            if self.type_status == 1:
                 self.isactive = False
-                self.status = u'等待签名'
+                self.status = u'等待签名校验（1/3）。'
+            elif self.type_status in [0, 2]:
+                if self.code and self.appcode and self.imageid:
+                    self.isactive = True
+                    self.type_status = 0
+                else:
+                    self.isactive = False
+                    self.type_status = 3
+                    self.status = u'等待解析（2/3）。'
             else:
-                self.isactive = True
+                self.isactive = False
+                self.status = u'等待解析（2/3）。'
         else:
             self.isactive = False
-            self.status = u'名称、code、应用包名、简介、图标 不能为空'
+            self.status = u''
+            if not self.name:
+                self.status += u'名称、'
+            if not self.desc:
+                self.status += u'应用介绍、'
+            if not self.apkkey:
+                self.status += u'apk文件、'
+            self.status = self.status[:-1] + u'没有提供,'
+
         super(Plugin, self).put(**kwargs)
         pluginCount = PluginCount.get_or_insert('plugin_count')
         if flag:

@@ -214,6 +214,9 @@ class PluginDelete(Page):
         user = get_current_user(self)
         pluginid = self.request.get('pluginid')
         plugin = Plugin.get_by_id(int(pluginid))
+        if not plugin:
+            self.getResult(True, u'删除成功。', None)
+            return
         if user.get("auth") == 'admin' or user.get('username') == plugin.username:
             plugin.delete()
             self.getResult(True, u'删除成功。', None)
@@ -348,6 +351,6 @@ class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
                 b.delete()
         plugin.apkkey = str(blob_info.key())
         plugin.apkverson += 1
-        plugin.type_status = 2
+        plugin.type_status = 1
         plugin.put()
         self.response.out.write(json.dumps({'success': True, 'message': u'上传APK成功', 'status_code': 200, 'dialog': 1}))
