@@ -18,7 +18,7 @@
 import webapp2
 # from mogu.kind import KindList, KindUpdate, KindDelete, KindAddPlugin, KindMove, KindPluginDelete, KindPluginMove, \
 #     FenKindList, FenKindPlugin
-from mogu.uploadscript import PluginUploadScript
+from mogu.uploadscript import PluginUploadScript, PluginUploadNeedScript
 from mogu.website import WebsiteList, WebsiteUpdate, WebsiteDelete
 from mogu3.login import Login, RegUser, Logout
 from mogu.notice import NoticeInfoUpdate, NoticeList, NoticeUpdate, NoticeDelete, NoticeDetail, DeleteContentNotice, \
@@ -71,7 +71,9 @@ app = webapp2.WSGIApplication([
                                   ('/imageupload', ImageUploadHandler),
                                   ('/iconupload', IconUploadHandler),
                                   ('/upload', UploadHandler),
+
                                   ('/PluginUploadScript', PluginUploadScript),
+                                  ('/PluginUploadNeedScript', PluginUploadNeedScript),
                                   # ('/PluginUploadApkScript', PluginUploadApkScript),
                                   # ('/PluginUploadApkDataScript', PluginUploadApkDataScript),
                                   ('/serve/([^/]+)?/([0-9]+)?/([0-9]+)?/$', ServeHandler),

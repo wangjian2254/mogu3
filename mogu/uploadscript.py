@@ -11,33 +11,49 @@ import datetime
 __author__ = u'王健'
 timezone = datetime.timedelta(hours=8)
 
+class PluginUploadNeedScript(Page):
+    def post(self):
+        appcode = self.request.get('appcode', None)
+        imagenum = self.request.get('imagenum', '0')
+        plugin = None
+        if 0 < Plugin.all().filter('appcode =', appcode).count():
+            for p in Plugin.all().filter('appcode =', appcode):
+                plugin = p
+        if not plugin:
+            self.flush({"status": 404})
+            return
+
+        result = {'status': 200}
+        if int(imagenum) != len(plugin.imagelist):
+            for imgid in plugin.imagelist:
+                    b = blobstore.BlobInfo.get(imgid)
+                    if b:
+                        b.delete()
+            imgurllist = []
+            for i in range(10):
+                imgurllist.append(blobstore.create_upload_url('/imageupload?pluginid=%s' % (plugin.key().id())))
+            result['upload_image_url'] = imgurllist
+        if not plugin.apkkey:
+            result['upload_url'] = blobstore.create_upload_url('/upload?pluginid=%s' % (plugin.key().id()))
+        if not plugin.imageid:
+            result['upload_icon_url'] = blobstore.create_upload_url('/iconupload?pluginid=%s' % (plugin.key().id()))
+        self.flush(result)
 class PluginUploadScript(Page):
     def post(self):
+        result = {'status': 200}
         noteupdate = datetime.datetime.utcnow() + timezone
-        # id = self.request.get('id', None)
         name = self.request.get('name', None)
         code = self.request.get('code', None)
         appcode = self.request.get('appcode', None)
         plugin = None
         if 0 < Plugin.all().filter('appcode =', appcode).count():
             for p in Plugin.all().filter('appcode =', appcode):
-
-                # if plugin.apkkey:
-                #     b = blobstore.BlobInfo.get(plugin.apkkey)
-                #     if b:
-                #         b.delete()
-                # if p.imageid:
-                #     b = blobstore.BlobInfo.get(p.imageid)
-                #     if b:
-                #         b.delete()
-                for imgid in p.imagelist:
-                    b = blobstore.BlobInfo.get(imgid)
-                    if b:
-                        b.delete()
                 plugin = p
         desc = self.request.get('desc', None)
+        flag = True
         if not plugin:
             plugin = Plugin()
+            flag = False
 
         plugin.name = name
         plugin.code = code
@@ -47,18 +63,16 @@ class PluginUploadScript(Page):
         plugin.username = 'admin@gmail.com'
         plugin.index_time = noteupdate
         plugin.lastUpdateTime = noteupdate
-        if not id and 0 < Plugin.all().filter('appcode =', appcode).count():
-            return self.flush({'status':500,'message':u'插件已经存在'})
-
         plugin.put()
-        imgurllist = []
-        for i in range(10):
-            imgurllist.append(blobstore.create_upload_url('/imageupload?pluginid=%s' % (plugin.key().id())))
-        result = {'status': 200, 'upload_image_url': imgurllist}
-        if not plugin.apkkey:
-            result['upload_url'] = blobstore.create_upload_url('/upload?pluginid=%s' % (plugin.key().id()))
-        if not plugin.imageid:
-            result['upload_icon_url'] = blobstore.create_upload_url('/iconupload?pluginid=%s' % (plugin.key().id()))
+        if not flag:
+            imgurllist = []
+            for i in range(10):
+                imgurllist.append(blobstore.create_upload_url('/imageupload?pluginid=%s' % (plugin.key().id())))
+            result['upload_image_url'] = imgurllist
+            if not plugin.apkkey:
+                result['upload_url'] = blobstore.create_upload_url('/upload?pluginid=%s' % (plugin.key().id()))
+            if not plugin.imageid:
+                result['upload_icon_url'] = blobstore.create_upload_url('/iconupload?pluginid=%s' % (plugin.key().id()))
         self.flush(result)
 
 

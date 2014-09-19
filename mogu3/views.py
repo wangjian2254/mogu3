@@ -103,16 +103,15 @@ class PluginList(Page):
             if kind:
                 query = Plugin.all().order('index_time')
                 query = query.filter('kindids =', int(kind))
+                count = query.count()
             else:
                 query = Plugin.all().order('__key__')
+                count = PluginCount.getPluginCount()
             if not page:
                 query = query.fetch(30)
             else:
                 query = query.fetch(30, 30 * page)
-            pluginCount = PluginCount.get_or_insert('plugin_count')
-            # pluginCount.num = Plugin.all().count()
-            # pluginCount.put()
-            count = pluginCount.num
+
         if user.get('auth') == 'user':
             cachename = 'user_applist_%s' % (user.get('username'))
             cacheresult = memcache.get(cachename)

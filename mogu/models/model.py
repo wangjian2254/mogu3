@@ -69,6 +69,15 @@ class Kind(db.Model):
 class PluginCount(db.Model):
     num = db.IntegerProperty(indexed=False, default=0)
 
+    @classmethod
+    def getPluginCount(cls):
+        num = memcache.get('allplugincount')
+        if not num:
+            pluginCount = PluginCount.get_or_insert("plugin_count")
+            num = pluginCount.num
+            memcache.set('allplugincount', num, 3600*10)
+        return num
+
 
 class Plugin(db.Model):
     name = db.StringProperty()
@@ -111,6 +120,7 @@ class Plugin(db.Model):
         pluginCount = PluginCount.get_or_insert('plugin_count')
         pluginCount.num -= 1
         pluginCount.put()
+        memcache.delete('allplugincount')
         memcache.delete('appnamelist')
         memcache.delete('pluginid%s' % self.key().id())
         memcache.delete('user_applist_%s' % (self.username))
@@ -160,7 +170,7 @@ class Plugin(db.Model):
         if flag:
             pluginCount.num += 1
             pluginCount.put()
-
+        memcache.delete('allplugincount')
         memcache.delete('appnamelist')
         memcache.delete('pluginid%s' % self.key().id())
         memcache.delete('user_applist_%s' % (self.username))
