@@ -62,6 +62,7 @@ class Kind(db.Model):
     def put(self, **kwargs):
         super(Kind, self).put(**kwargs)
 
+        memcache.delete('kindsort')
         memcache.delete('allkind')
         memcache.delete('allkindlist')
 

@@ -193,7 +193,10 @@ class PluginUpdate(Page):
             if user.get("auth") != 'admin' and user.get('username') != plugin.username:
                 self.getResult(False, u'删除失败，权限不足。', None)
                 return
-            plugin.kindids[0] = int(self.request.get('kind'))
+            if len(plugin.kindids) == 0:
+                plugin.kindids.append(int(self.request.get('kind')))
+            else:
+                plugin.kindids[0] = int(self.request.get('kind'))
 
         plugin.name = self.request.get('name', '')
         plugin.appcode = self.request.get('appcode', '')
